@@ -1,2 +1,1 @@
-# AFS
-AFS
+A small helper
