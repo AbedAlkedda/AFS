@@ -9,6 +9,7 @@ class NFA
     @delta_star = { a: delta_a, b: delta_b }
     @state_set  = state_set state_set
     @finals     = finals
+    @states     = state_set
     @start      = start
   end
 
@@ -70,11 +71,20 @@ class NFA
   end
 
   def potens_set
-    @state_set.each { |set|  @delta_star.each { |delta, relation| puts "#{set.inspect}·#{delta}() = #{_image(set, relation).inspect}" } }
+    @state_set.each { |set| @delta_star.each { |delta, relation| puts "#{set.inspect}·#{delta}() = #{_image(set, relation).inspect}" } }
   end
 
   def to_reg
-    puts 'test'
+    l0 = _l0
+    l = []
+    @states.each_with_index do |_, i|
+      l[i] = []
+      @states.each_with_index do |_, y|
+        letter = ''
+      end
+    end
+
+    l0.each { |row| puts row.inspect }
   end
 
   private
@@ -86,5 +96,45 @@ class NFA
 
   def _concat(set)
     set.to_a.join('').to_i
+  end
+
+  def _l0
+    l0 = []
+    @states.each_with_index do |_, i|
+      l0[i] = []
+      @states.each_with_index do |_, y|
+        letter = _letter i, y
+
+        l0[i][y] = letter
+      end
+    end
+
+    l0
+  end
+
+  def _letter_build(l, i, y)
+    letter  = i == y ? 'ε' : ''
+    letter += letter.empty? ? l : "+#{l}"
+
+    letter
+  end
+
+  def _reachable?(delta, i, y)
+    (@delta_star[delta] & [[i + 1, y + 1]]).any?
+  end
+
+  def _letter(i, y)
+    letter = ''
+
+    if _reachable? :a, i, y
+      letter = _letter_build 'a', i, y
+    elsif _reachable? :b, i, y
+      letter = _letter_build 'b', i, y
+    else
+      letter += '∅'
+      letter  = 'ε' if i == y
+    end
+
+    letter
   end
 end

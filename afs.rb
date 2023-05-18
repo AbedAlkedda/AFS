@@ -21,5 +21,5 @@ finale  = [1]
 
 nfa = NFA.new delta_a, delta_b, states, start, finale
 nfa.to_reg
-nfa.to_dfa
+# nfa.to_dfa
 # nfa.potens_set
