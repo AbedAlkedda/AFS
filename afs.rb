@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'NFA'
+require_relative 'nfa'
 require 'byebug'
 
 # a = NFA.new([[1, 2], [2, 3], [3, 1]], # delta a

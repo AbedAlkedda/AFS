@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative 'dfa'
 
 # NFA class
 class NFA
@@ -31,8 +32,7 @@ class NFA
   def to_dfa
     reachable     = []
     done_state    = []
-    finales       = []
-    states        = []
+    dfa           = DFA.new [], [], [], @start, []
     current_state = @start
 
     loop do
@@ -40,12 +40,12 @@ class NFA
         break if done_state.include? current_state
 
         res = _image current_state, relation
-        rgt = _concat(res).empty?           ? '0' : _concat(res)
-        lft = _concat(current_state).empty? ? '0' : _concat(current_state)
+        rgt = _concat res
+        lft = _concat current_state
 
-        states << rgt unless states.include? rgt
+        dfa.state_set << rgt unless dfa.state_set.include? rgt
 
-        puts "(#{lft}, '#{delta}', #{rgt})"
+        dfa.delta_star[delta] << [lft, rgt]
 
         reachable << res unless reachable.include? res
 
@@ -55,15 +55,16 @@ class NFA
       break if reachable.empty?
 
       done_state << current_state unless done_state.include? current_state
-      finales    << current_state if (current_state & @finals).any?
+      dfa.finals << current_state if (current_state & @finals).any?
 
       current_state = reachable.last
 
       reachable.pop
     end
 
-    puts "finles: #{finales.map { |ele| _concat(ele).to_i }}"
-    puts "states: #{states.map(&:to_i)}"
+    puts "finals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
+    puts "states: #{dfa.state_set.map(&:to_i)}"
+    dfa.delta_star.each { |k, v| v.each { |e| puts "(#{e[0]} ,#{k}, #{e[1]})" } }
   end
 
   def potens_set
@@ -78,6 +79,6 @@ class NFA
   end
 
   def _concat(set)
-    set.to_a.join('')
+    set.to_a.join('').to_i
   end
 end
