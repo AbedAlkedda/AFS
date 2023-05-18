@@ -45,12 +45,13 @@ class NFA
         lft = _concat current_state
 
         dfa.state_set << rgt unless dfa.state_set.include? rgt
+        dfa.state_set << lft unless dfa.state_set.include? lft
 
         dfa.delta_star[delta] << [lft, rgt]
 
         reachable << res unless reachable.include? res
 
-        reachable.pop if done_state.include? res
+        reachable.delete res if done_state.include? res
       end
 
       break if reachable.empty?
@@ -70,6 +71,10 @@ class NFA
 
   def potens_set
     @state_set.each { |set|  @delta_star.each { |delta, relation| puts "#{set.inspect}·#{delta}() = #{_image(set, relation).inspect}" } }
+  end
+
+  def to_reg
+    puts 'test'
   end
 
   private
