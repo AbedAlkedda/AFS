@@ -1,28 +1,18 @@
-require 'awesome_print'
-require 'byebug'
-require 'set'
+# frozen_string_literal: true
 
-# ToDo
-# Print small solution
-# change run to .to_dfa
-
-# Bla
+# NFA class
 class NFA
-  def initialize(delta_a, delta_b, state_set, finals)
+  def initialize(delta_a, delta_b, state_set, start, finals)
     # Q, I, F, delta
-    @delta_star = { 'a' => delta_a, 'b' => delta_b }
+    @delta_star = { a: delta_a, b: delta_b }
     @state_set  = state_set state_set
     @finals     = finals
+    @start      = start
   end
 
   # Relation Q X Q
   def relation(max)
     (1..max).flat_map { |x| (1..3).map { |y| [x, y] } }
-  end
-
-  # alle bilder eine menge m unter r
-  def image(m, r)
-    m.flat_map { |x| r.map { |y, z| z if x == y }.compact }.sort.uniq
   end
 
   # Verkettung
@@ -38,37 +28,56 @@ class NFA
     power_set
   end
 
-  def run
-    @state_set.each do |set|
+  def to_dfa
+    reachable     = []
+    done_state    = []
+    finales       = []
+    states        = []
+    current_state = @start
+
+    loop do
       @delta_star.each do |delta, relation|
-        res = image set, relation
-        puts "#{set.inspect} · #{delta}(#{relation.inspect}) = #{res.inspect}"
+        break if done_state.include? current_state
+
+        res = _image current_state, relation
+        rgt = _concat(res).empty?           ? '0' : _concat(res)
+        lft = _concat(current_state).empty? ? '0' : _concat(current_state)
+
+        states << rgt unless states.include? rgt
+
+        puts "(#{lft}, '#{delta}', #{rgt})"
+
+        reachable << res unless reachable.include? res
+
+        reachable.pop if done_state.include? res
       end
+
+      break if reachable.empty?
+
+      done_state << current_state unless done_state.include? current_state
+      finales    << current_state if (current_state & @finals).any?
+
+      current_state = reachable.last
+
+      reachable.pop
     end
+
+    puts "finles: #{finales.map { |ele| _concat(ele).to_i }}"
+    puts "states: #{states.map(&:to_i)}"
   end
 
-  def autotool_format
-    @state_set.each do |set|
-      @delta_star.each do |delta, relation|
-        res = image set, relation
-        puts "(#{set.to_a.join('')}, '#{delta}', #{res.to_a.join('')}),"
-      end
-    end
+  def potens_set
+    @state_set.each { |set|  @delta_star.each { |delta, relation| puts "#{set.inspect}·#{delta}() = #{_image(set, relation).inspect}" } }
   end
 
-  def clean_format
-    @state_set.each do |set|
-      @delta_star.each do |delta, relation|
-        res = image set, relation
-        puts "#{set.inspect}·#{delta}() = #{res.inspect}"
-      end
-      puts "\n"
-    end
+  private
+
+  # alle bilder eine menge m unter r
+  def _image(m, r)
+    m.flat_map { |x| r.map { |y, z| z if x == y }.compact }.sort.uniq
   end
 
-  def finals_set
-    filtered_set = @state_set.select { |subset| (subset.to_set & @finals.to_set).any? }
-
-    puts "finals set = #{filtered_set.inspect}"
+  def _concat(set)
+    set.to_a.join('')
   end
 end

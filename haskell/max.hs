@@ -8,11 +8,6 @@ maximum' (x:xs) = max x (maximum' xs)
 adddme :: (Num a) => [a] -> a
 adddme [] = error "maximum of empty list"
 adddme [x] = x
-adddme (x:xs) = x + (adddme xs)
+adddme (x:xs) = x + adddme xs
 
-foldl (\acc x -> acc + x) 0 [1, 2, 3, 4, 5]
--- 0 + 1 = 1
--- 1 + 2 = 3
--- 3 + 3 = 6
--- 6 + 4 = 10
--- 10 + 5 = 15
+-- foldl (\acc x -> acc + x) 0 [1, 2, 3, 4, 5]
