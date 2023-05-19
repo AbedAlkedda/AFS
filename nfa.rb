@@ -11,6 +11,7 @@ class NFA
     @finals     = finals
     @states     = state_set
     @start      = start
+    @empty      = "\u2205"
   end
 
   # Relation Q X Q
@@ -75,16 +76,52 @@ class NFA
   end
 
   def to_reg
+    steps = {}
     l0 = _l0
-    l = []
-    @states.each_with_index do |_, i|
-      l[i] = []
-      @states.each_with_index do |_, y|
+    steps['l0'] = l0
+
+    puts 'L0'
+    l0.each { |row| puts row.inspect }
+
+    l_next = []
+    acc = 0
+
+    @states.each_with_index do |_, p|
+      l_next[p] = []
+      @states.each_with_index do |_, q|
         letter = ''
+        case [acc == p, acc == q]
+        when [true, true]
+          letter_holder = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
+          letter = "(#{letter_holder})*"
+        when [true, false]
+          lft = l0[acc][acc]
+          rgt = l0[acc][q]
+
+          letter = "(#{lft})*.#{rgt}"
+          letter = @empty if lft == @empty || rgt == @empty
+
+        when [false, true]
+          lft = l0[p][acc]
+          rgt = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
+
+          letter = "#{lft}.(#{rgt})*"
+          letter = @empty if lft == @empty || rgt == @empty
+        else
+          lft = l0[p][q]
+          letter_holder = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
+          rgt = "#{l0[p][acc]}.(#{letter_holder})* .#{l0[acc][q]}"
+          rgt = @empty if l0[p][acc] == @empty || l0[acc][acc] == @empty || l0[acc][q] == @empty
+
+          letter = rgt == @empty ? lft : "#{lft} + (#{rgt})"
+        end
+        l_next[p][q] = letter
       end
     end
+    steps["l#{steps.size}"] = l_next
 
-    l0.each { |row| puts row.inspect }
+    puts 'l1'
+    l_next.each { |row| puts row.inspect }
   end
 
   private
@@ -103,9 +140,7 @@ class NFA
     @states.each_with_index do |_, i|
       l0[i] = []
       @states.each_with_index do |_, y|
-        letter = _letter i, y
-
-        l0[i][y] = letter
+        l0[i][y] = _letter i, y
       end
     end
 
@@ -119,16 +154,16 @@ class NFA
     letter
   end
 
-  def _reachable?(delta, i, y)
+  def _reachable(delta, i, y)
     (@delta_star[delta] & [[i + 1, y + 1]]).any?
   end
 
   def _letter(i, y)
     letter = ''
 
-    if _reachable? :a, i, y
+    if _reachable :a, i, y
       letter = _letter_build 'a', i, y
-    elsif _reachable? :b, i, y
+    elsif _reachable :b, i, y
       letter = _letter_build 'b', i, y
     else
       letter += '∅'
