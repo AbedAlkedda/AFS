@@ -84,38 +84,11 @@ class NFA
     l0.each { |row| puts row.inspect }
 
     l_next = []
-    acc = 0
 
     @states.each_with_index do |_, p|
       l_next[p] = []
       @states.each_with_index do |_, q|
-        letter = ''
-        case [acc == p, acc == q]
-        when [true, true]
-          letter_holder = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
-          letter = "(#{letter_holder})*"
-        when [true, false]
-          lft = l0[acc][acc]
-          rgt = l0[acc][q]
-
-          letter = "(#{lft})*.#{rgt}"
-          letter = @empty if lft == @empty || rgt == @empty
-
-        when [false, true]
-          lft = l0[p][acc]
-          rgt = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
-
-          letter = "#{lft}.(#{rgt})*"
-          letter = @empty if lft == @empty || rgt == @empty
-        else
-          lft = l0[p][q]
-          letter_holder = l0[acc][acc].size == 3 ? l0[acc][acc][2] : l0[acc][acc]
-          rgt = "#{l0[p][acc]}.(#{letter_holder})* .#{l0[acc][q]}"
-          rgt = @empty if l0[p][acc] == @empty || l0[acc][acc] == @empty || l0[acc][q] == @empty
-
-          letter = rgt == @empty ? lft : "#{lft} + (#{rgt})"
-        end
-        l_next[p][q] = letter
+        l_next[p][q] = _l l0, p, q
       end
     end
     steps["l#{steps.size}"] = l_next
@@ -147,6 +120,16 @@ class NFA
     l0
   end
 
+  def _l(l0, p, q)
+    h = 0
+    case [h == p, h == q]
+    when [true, true]  then _states_equal l0, h
+    when [false, true] then _states_begin l0, h, p
+    when [true, false] then _states_end   l0, h, q
+    else _states_unequal l0, p, q, h
+    end
+  end
+
   def _letter_build(l, i, y)
     letter  = i == y ? 'ε' : ''
     letter += letter.empty? ? l : "+#{l}"
@@ -171,5 +154,42 @@ class NFA
     end
 
     letter
+  end
+
+  def _states_equal(l, h)
+    letter_holder = _state_simplify l, h
+
+    "(#{letter_holder})*"
+  end
+
+  def _states_begin(l, h, p)
+    lft    = l[p][h]
+    rgt    = l[h][h].size == 3 ? l[h][h][2] : l[h][h]
+    letter = "#{lft}.(#{rgt})*"
+    letter = @empty if lft == @empty || rgt == @empty
+
+    letter
+  end
+
+  def _states_end(l, h, q)
+    lft    = l[h][h]
+    rgt    = l[h][q]
+    letter = "(#{lft})*.#{rgt}"
+    letter = @empty if lft == @empty || rgt == @empty
+
+    letter
+  end
+
+  def _states_unequal(l0, p, q, h)
+    lft    = l0[p][q]
+    letter = _state_simplify l0, h
+    rgt    = "#{l0[p][h]}.(#{letter})* .#{l0[h][q]}"
+    rgt    = @empty if l0[p][h] == @empty || l0[h][h] == @empty || l0[h][q] == @empty
+
+    rgt == @empty ? lft : "#{lft} + (#{rgt})"
+  end
+
+  def _state_simplify(l, h)
+    l[h][h].size == 3 ? l[h][h][2] : l[h][h]
   end
 end
