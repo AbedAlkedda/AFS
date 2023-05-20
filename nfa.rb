@@ -76,25 +76,23 @@ class NFA
   end
 
   def to_reg
-    steps = {}
     l0 = _l0
+    steps = {}
     steps['l0'] = l0
 
-    puts 'L0'
-    l0.each { |row| puts row.inspect }
-
-    l_next = []
-
-    @states.each_with_index do |_, p|
-      l_next[p] = []
-      @states.each_with_index do |_, q|
-        l_next[p][q] = _l l0, p, q
+    2.times do |h|
+      l = []
+      @states.each_with_index do |_, p|
+        l[p] = []
+        @states.each_with_index do |_, q|
+          l[p][q] = _l steps["l#{h}"], p, q, steps.size - 1
+        end
       end
+      steps["l#{steps.size}"] = l
+      puts 'done'
     end
-    steps["l#{steps.size}"] = l_next
 
-    puts 'l1'
-    l_next.each { |row| puts row.inspect }
+    steps.each { |k, v| puts k; v.each { |s| puts s.inspect } }
   end
 
   private
@@ -120,13 +118,12 @@ class NFA
     l0
   end
 
-  def _l(l0, p, q)
-    h = 0
+  def _l(lll, p, q, h)
     case [h == p, h == q]
-    when [true, true]  then _states_equal l0, h
-    when [false, true] then _states_begin l0, h, p
-    when [true, false] then _states_end   l0, h, q
-    else _states_unequal l0, p, q, h
+    when [true, true]  then _states_equal lll, h
+    when [false, true] then _states_begin lll, h, p
+    when [true, false] then _states_end   lll, h, q
+    else _states_unequal lll, p, q, h
     end
   end
 
@@ -157,9 +154,7 @@ class NFA
   end
 
   def _states_equal(l, h)
-    letter_holder = _state_simplify l, h
-
-    "(#{letter_holder})*"
+    "(#{_state_simplify l, h})*"
   end
 
   def _states_begin(l, h, p)

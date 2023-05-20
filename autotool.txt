@@ -225,3 +225,24 @@ NFA
       , ( 345, 'b', 134)
       ]
   }
+
+
+
+NFA 
+  { alphabet = mkSet "ab"
+  , states = mkSet [ 1, 2, 0, 24]
+  , starts = mkSet [ 2 ]
+  , finals = mkSet [ 24 ]
+  , trans = collect 
+      [
+         (2 ,'a', 1)
+        ,(0 ,'a', 0)
+        ,(1 ,'a', 24)
+        ,(24 ,'a', 1)
+        ,(2 ,'b', 0)
+        ,(0 ,'b', 0)
+        ,(1 ,'b', 2)
+        ,(24 ,'b', 24)
+
+      ] 
+  }
