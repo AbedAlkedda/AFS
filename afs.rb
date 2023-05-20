@@ -13,14 +13,14 @@ require 'byebug'
 # b.to_dfa
 # b.potens_set
 
-# delta_a = [[1, 1], [2, 3], [3, 2]]
-# delta_b = [[1, 2], [2, 1], [3, 3]]
-# states  = [1, 2, 3]
-# start   = [1]
-# finale  = [1]
+delta_a = [[1, 1], [2, 3], [3, 2]]
+delta_b = [[1, 2], [2, 1], [3, 3]]
+states  = [1, 2, 3]
+start   = [1]
+finale  = [1]
 
-# nfa = NFA.new delta_a, delta_b, states, start, finale
-# nfa.to_reg
+nfa = NFA.new delta_a, delta_b, states, start, finale
+nfa.to_reg
 # nfa.to_dfa
 # nfa.potens_set
 
