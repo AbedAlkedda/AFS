@@ -4,39 +4,8 @@ require_relative 'dfa'
 require_relative 'automata'
 # NFA class
 class NFA < Automata
-  def to_dfa
-    reachable     = []
-    done_state    = []
-    dfa           = DFA.new { |a| a.build [], [], [], @start, [] }
-    current_state = @start
-
-    loop do
-      @delta_star.each do |delta, relation|
-        break if done_state.include? current_state
-
-        res = _image current_state, relation
-        rgt = _concat res
-        lft = _concat current_state
-
-        dfa.states << rgt unless dfa.states.include? rgt
-        dfa.states << lft unless dfa.states.include? lft
-
-        dfa.delta_star[delta] << [lft, rgt]
-
-        reachable << res unless reachable.include? res
-
-        reachable.delete res if done_state.include? res
-      end
-
-      break if reachable.empty?
-
-      done_state << current_state unless done_state.include? current_state
-      dfa.finals << current_state if (current_state & @finals).any?
-
-      current_state = reachable.last
-
-      reachable.pop
-    end
+  def nfa_to_dfa
+    dfa = to_dfa
 
     puts "finals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
     puts "states: #{dfa.states.map(&:to_i)}"
@@ -52,7 +21,7 @@ class NFA < Automata
     steps = {}
     steps['l0'] = l0
 
-    2.times do |h|
+    @states.size.times do |h|
       l = []
       @states.each_with_index do |_, p|
         l[p] = []
@@ -61,22 +30,12 @@ class NFA < Automata
         end
       end
       steps["l#{steps.size}"] = l
-      puts 'done'
     end
 
     steps.each { |k, v| puts k; v.each { |s| puts s.inspect } }
   end
 
   private
-
-  # alle bilder eine menge m unter r
-  def _image(m, r)
-    m.flat_map { |x| r.map { |y, z| z if x == y }.compact }.sort.uniq
-  end
-
-  def _concat(set)
-    set.to_a.join('').to_i
-  end
 
   def _l0
     l0 = []
