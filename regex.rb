@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Regex string builder
-class RX
+class Regex
   def self.new
     instance = allocate
     yield instance
@@ -43,7 +43,7 @@ class RX
 end
 
 0..30.times do |m|
-  RX.new do |x|
+  Regex.new do |x|
     x.run(/^(a|b)*b(a|b){2}$/, m + 3)
     x.print
     x.save
