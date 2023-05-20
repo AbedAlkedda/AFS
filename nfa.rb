@@ -1,41 +1,13 @@
 # frozen_string_literal: true
 
 require_relative 'dfa'
-
+require_relative 'automata'
 # NFA class
-class NFA
-  def initialize(delta_a, delta_b, state_set, start, finals)
-    # Q, I, F, delta
-    @delta_star = { a: delta_a, b: delta_b }
-    @state_set  = state_set state_set
-    @finals     = finals
-    @states     = state_set
-    @start      = start
-    @empty      = "\u2205"
-  end
-
-  # Relation Q X Q
-  def relation(max)
-    (1..max).flat_map { |x| (1..3).map { |y| [x, y] } }
-  end
-
-  # Verkettung
-  def compose(a, b)
-    a.flat_map { |x, y1| b.select { |y2, _| y1 == y2 }.map { |_, z| [x, z] } }
-  end
-
-  # Potenzmenge von Q
-  def state_set(q)
-    power_set = [[]]
-    q.each { |e| power_set.concat(power_set.map { |set| set + [e] }) }
-
-    power_set
-  end
-
+class NFA < Automata
   def to_dfa
     reachable     = []
     done_state    = []
-    dfa           = DFA.new [], [], [], @start, []
+    dfa           = DFA.new { |a| a.build [], [], [], @start, [] }
     current_state = @start
 
     loop do
@@ -46,8 +18,8 @@ class NFA
         rgt = _concat res
         lft = _concat current_state
 
-        dfa.state_set << rgt unless dfa.state_set.include? rgt
-        dfa.state_set << lft unless dfa.state_set.include? lft
+        dfa.states << rgt unless dfa.states.include? rgt
+        dfa.states << lft unless dfa.states.include? lft
 
         dfa.delta_star[delta] << [lft, rgt]
 
@@ -67,7 +39,7 @@ class NFA
     end
 
     puts "finals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
-    puts "states: #{dfa.state_set.map(&:to_i)}"
+    puts "states: #{dfa.states.map(&:to_i)}"
     dfa.delta_star.each { |k, v| v.each { |e| puts "(#{e[0]} ,#{k}, #{e[1]})" } }
   end
 
