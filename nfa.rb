@@ -32,7 +32,16 @@ class NFA < Automata
       steps["l#{steps.size}"] = l
     end
 
-    steps.each { |k, v| puts k; v.each { |s| puts s.inspect } }
+    steps.each do |key, value|
+      puts key
+      max_width = value.map { |column| column.max_by(&:length).length }.max
+      value.transpose.each do |column|
+        column.each do |element|
+          printf("\t|%-#{max_width}s", element)
+        end
+        puts '|'
+      end
+    end
   end
 
   private
