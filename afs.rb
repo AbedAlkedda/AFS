@@ -38,5 +38,6 @@ finals = [2]
 puts '2 < 1'
 NFA.new do |a|
   a.build d_a, d_b, states, starts, finals
+  a.to_dfa
   a.to_reg
 end

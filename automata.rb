@@ -36,7 +36,7 @@ class Automata
     power_set
   end
 
-  def to_dfa
+  def nfa_to_dfa
     dfa = DFA.new { |a| a.build [], [], [], @start, [] }
     reachable     = []
     done_state    = []

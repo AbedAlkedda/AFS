@@ -4,8 +4,8 @@ require_relative 'dfa'
 require_relative 'automata'
 # NFA class
 class NFA < Automata
-  def nfa_to_dfa
-    dfa = to_dfa
+  def to_dfa
+    dfa = nfa_to_dfa
 
     puts "finals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
     puts "states: #{dfa.states.map(&:to_i)}"
@@ -32,6 +32,7 @@ class NFA < Automata
       steps["l#{steps.size}"] = l
     end
 
+    # in a method
     steps.each do |key, value|
       puts key
       max_width = value.map { |column| column.max_by(&:length).length }.max
@@ -58,12 +59,12 @@ class NFA < Automata
     l0
   end
 
-  def _l(lll, p, q, h)
+  def _l(l, p, q, h)
     case [h == p, h == q]
-    when [true, true]  then _states_equal lll, h
-    when [false, true] then _states_begin lll, h, p
-    when [true, false] then _states_end   lll, h, q
-    else _states_unequal lll, p, q, h
+    when [true, true]  then _states_equal l, h
+    when [false, true] then _states_begin l, h, p
+    when [true, false] then _states_end   l, h, q
+    else _states_unequal l, p, q, h
     end
   end
 
