@@ -11,8 +11,12 @@ class DFA < Automata
     states = _states
     r0     = _r0 finals, states
 
-    puts
-    puts r0.inspect
+    f = (finals & states.keys).each_with_object({}) do |elt, memo|
+      memo[elt] = states[elt]
+    end
+
+    puts "\nF=#{f.inspect}"
+    puts "\nR0=#{r0.inspect}"
   end
 
   private
@@ -36,11 +40,14 @@ class DFA < Automata
   def _states
     ltr = 'p'
     _swap_for_demo
-
-    @states.each_with_object({}) do |elt, memo|
+    states = @states.each_with_object({}) do |elt, memo|
       memo[elt] = ltr
       ltr       = ltr.succ
     end
+
+    puts "\nQ=#{states}"
+
+    states
   end
 
   def _swap_for_demo
