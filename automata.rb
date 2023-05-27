@@ -15,7 +15,7 @@ class Automata
     @finals     = finals
     @states     = states
     @start      = starts
-    @empty      = "\u2205"
+    @epsilon    = "\u2205"
   end
 
   # Binary relation for max number
@@ -69,6 +69,10 @@ class Automata
     end
 
     dfa
+  end
+
+  def nfa_to_reg
+    'test'
   end
 
   private

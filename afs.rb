@@ -11,33 +11,20 @@ require 'byebug'
 # starts = [1]
 # finals = [5]
 
-# d_a    = [[1, 1], [2, 3], [3, 2]]
-# d_b    = [[1, 2], [2, 1], [3, 3]]
-# states = [1, 2, 3]
-# starts = [1]
-# finals = [1]
-
-d_a    = [[1, 1], [2, 2]]
-d_b    = [[1, 2], [2, 1]]
-states = [1, 2]
+d_a    = [[1, 1], [2, 3], [3, 2]]
+d_b    = [[1, 2], [2, 1], [3, 3]]
+states = [1, 2, 3]
 starts = [1]
 finals = [1]
 
-puts '1 < 2'
+# d_a    = [[1, 1], [2, 2]]
+# d_b    = [[1, 2], [2, 1]]
+# states = [1, 2]
+# starts = [1]
+# finals = [1]
+
+
 NFA.new do |a|
   a.build d_a, d_b, states, starts, finals
-  a.to_reg
-end
-
-d_a   = [[1, 1], [2, 2]]
-d_b   = [[1, 2], [2, 1]]
-states = [1, 2]
-starts = [2]
-finals = [2]
-
-puts '2 < 1'
-NFA.new do |a|
-  a.build d_a, d_b, states, starts, finals
-  a.to_dfa
   a.to_reg
 end

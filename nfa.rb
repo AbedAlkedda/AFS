@@ -31,18 +31,7 @@ class NFA < Automata
       end
       steps["l#{steps.size}"] = l
     end
-
-    # in a method
-    steps.each do |key, value|
-      puts key
-      max_width = value.map { |column| column.max_by(&:length).length }.max
-      value.transpose.each do |column|
-        column.each do |element|
-          printf("\t|%-#{max_width}s", element)
-        end
-        puts '|'
-      end
-    end
+    _print_matrix steps
   end
 
   private
@@ -62,8 +51,8 @@ class NFA < Automata
   def _l(l, p, q, h)
     case [h == p, h == q]
     when [true, true]  then _states_equal l, h
-    when [false, true] then _states_begin l, h, p
-    when [true, false] then _states_end   l, h, q
+    when [true, false] then _states_begin  l, h, q
+    when [false, true] then _states_end l, h, p
     else _states_unequal l, p, q, h
     end
   end
@@ -98,34 +87,68 @@ class NFA < Automata
     "(#{_state_simplify l, h})*"
   end
 
-  def _states_begin(l, h, p)
-    lft    = l[p][h]
-    rgt    = l[h][h].size == 3 ? l[h][h][2] : l[h][h]
+  def _states_begin(l, h, q)
+    lft    = l[h][q]
+    rgt    = _clear_reg l[h][h]
     letter = "#{lft}.(#{rgt})*"
-    letter = @empty if lft == @empty || rgt == @empty
+    letter = @epsilon if lft == @epsilon || rgt == @epsilon
 
     letter
   end
 
-  def _states_end(l, h, q)
-    lft    = l[h][h]
-    rgt    = l[h][q]
+  def _states_end(l, h, p)
+    lft    = _clear_reg l[h][h]
+    rgt    = l[h][p]
     letter = "(#{lft})*.#{rgt}"
-    letter = @empty if lft == @empty || rgt == @empty
+    letter = @epsilon if lft == @epsilon || rgt == @epsilon
 
     letter
   end
 
   def _states_unequal(l0, p, q, h)
-    lft    = l0[p][q]
-    letter = _state_simplify l0, h
-    rgt    = "#{l0[p][h]}.(#{letter})* .#{l0[h][q]}"
-    rgt    = @empty if l0[p][h] == @empty || l0[h][h] == @empty || l0[h][q] == @empty
+    lft = l0[p][q]
+    lft = lft.dup
+    lft.gsub!(/∅/, '')
 
-    rgt == @empty ? lft : "#{lft} + (#{rgt})"
+    rgt = _states_unequal_rgt l0, p, q, h
+    rgt = rgt.dup
+    rgt.gsub!(/∅./, '')
+
+    return "(#{rgt})" if lft.empty?
+
+    rgt == @epsilon ? lft : "#{lft}+(#{rgt})"
   end
 
   def _state_simplify(l, h)
     l[h][h].size == 3 ? l[h][h][2] : l[h][h]
+  end
+
+  def _clear_reg(str)
+    str.gsub(/ε./, '')
+  end
+
+  def _empty?(state)
+    state == @epsilon
+  end
+
+  def _states_unequal_rgt(l, p, q, h)
+    letter = _clear_reg l[h][h]
+    rgt    = "#{l[h][q]}.(#{letter})*.#{l[p][h]}"
+    rgt    = @epsilon if _empty?(l[p][h]) || _empty?(l[h][h]) || _empty?(l[h][q])
+
+    rgt
+  end
+
+  def _print_matrix(steps)
+    steps.each do |key, value|
+      puts key
+      max_width = value.map { |column| column.max_by(&:length).length }.max
+      value.transpose.each do |column|
+        column.each do |element|
+          printf("\t|%-#{max_width}s", element)
+        end
+        puts '|'
+      end
+    end
   end
 end
