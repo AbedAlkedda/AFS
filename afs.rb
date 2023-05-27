@@ -6,11 +6,11 @@ require_relative 'automata'
 require 'byebug'
 require 'awesome_print'
 
-d_a    = [[1, 2], [2, 5], [3, 1], [4, 3], [5, 4]]
-d_b    = [[2, 4], [3, 3], [4, 4], [5, 1], [5, 3]]
-states = [1, 2, 3, 4, 5]
-starts = [1]
-finals = [5]
+# d_a    = [[1, 2], [2, 5], [3, 1], [4, 3], [5, 4]]
+# d_b    = [[2, 4], [3, 3], [4, 4], [5, 1], [5, 3]]
+# states = [1, 2, 3, 4, 5]
+# starts = [1]
+# finals = [5]
 
 # d_a    = [[1, 1], [2, 3], [3, 2]]
 # d_b    = [[1, 2], [2, 1], [3, 3]]
@@ -18,15 +18,17 @@ finals = [5]
 # starts = [1]
 # finals = [1]
 
-# d_a    = [[1, 1], [2, 2]]
-# d_b    = [[1, 2], [2, 1]]
-# states = [1, 2]
-# starts = [1]
-# finals = [1]
+d_a    = [[1, 1], [2, 2], [2, 1]]
+d_b    = [[1, 2]]
+states = [1, 2]
+starts = [1]
+finals = [2]
 
 NFA.new do |a|
   a.build d_a, d_b, states, starts, finals
-  # a.nfa_to_reg
+  puts 'crossboss'
+  a.potens_set
+  puts
   dfa = a.to_dfa
   a.dfa_to_min dfa
 end

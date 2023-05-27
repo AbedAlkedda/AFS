@@ -38,6 +38,10 @@ class Automata
     power_set
   end
 
+  def potens_set
+    @state_set.each { |set| @delta_star.each { |delta, relation| puts "#{set.inspect}·#{delta}() = #{_image(set, relation).inspect}" } }
+  end
+
   def nfa_to_dfa
     dfa = DFA.new { |a| a.build [], [], [], @start, [] }
     reachable     = []
@@ -69,6 +73,7 @@ class Automata
 
       reachable.pop
     end
+    dfa.finals.uniq!
 
     dfa
   end
