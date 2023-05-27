@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require_relative 'rx'
 
 # Practice some stuff out Theorithsche Informatik
 class Automata
@@ -72,7 +73,7 @@ class Automata
   end
 
   def nfa_to_reg
-    'test'
+    RX.new { |rx| rx.build @states, @delta_star }
   end
 
   private
