@@ -3,14 +3,8 @@
 require_relative 'nfa'
 require_relative 'automata'
 
-require 'byebug'
 require 'awesome_print'
-
-# d_a    = [[1, 2], [2, 5], [3, 1], [4, 3], [5, 4]]
-# d_b    = [[2, 4], [3, 3], [4, 4], [5, 1], [5, 3]]
-# states = [1, 2, 3, 4, 5]
-# starts = [1]
-# finals = [5]
+require 'byebug'
 
 # d_a    = [[1, 1], [2, 3], [3, 2]]
 # d_b    = [[1, 2], [2, 1], [3, 3]]

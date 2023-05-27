@@ -25,7 +25,8 @@ class Automata
     (1..max).flat_map { |x| (1..3).map { |y| [x, y] } }
   end
 
-  # Concatenation two states [[1,2]] . [[2, 1]] => [1, 1]
+  # Concatenation two states
+  # Example: [[1,2]] . [[2, 1]] => [1, 1]
   def compose(lft, rgt)
     lft.flat_map { |x, y1| rgt.select { |y2, _| y1 == y2 }.map { |_, z| [x, z] } }
   end
