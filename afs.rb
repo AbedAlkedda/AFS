@@ -4,6 +4,7 @@ require_relative 'nfa'
 require_relative 'automata'
 
 require 'byebug'
+require 'awesome_print'
 
 d_a    = [[1, 2], [2, 5], [3, 1], [4, 3], [5, 4]]
 d_b    = [[2, 4], [3, 3], [4, 4], [5, 1], [5, 3]]

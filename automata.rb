@@ -78,7 +78,14 @@ class Automata
   end
 
   def dfa_to_min(automat)
-    DFA.new { |a| a.build [], [], [], [], [] }.to_min automat
+    d_a    = automat.delta_star[:a]
+    d_b    = automat.delta_star[:b]
+    states = automat.states
+    starts = automat.start
+    finals = automat.finals
+
+    dfa = DFA.new { |a| a.build d_a, d_b, states, starts, finals }
+    dfa.to_min
   end
 
   private
