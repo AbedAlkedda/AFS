@@ -10,7 +10,9 @@ class NFA < Automata
 
     puts "finals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
     puts "states: #{dfa.states.map(&:to_i)}"
-    dfa.delta_star.each { |k, v| v.each { |e| puts "(#{e[0]} ,#{k}, #{e[1]})" } }
+    dfa.delta_star.each { |k, v| v.each { |e| puts "(#{e[0]} ,'#{k}', #{e[1]})" } }
+
+    dfa
   end
 
   def potens_set

@@ -77,6 +77,10 @@ class Automata
     RX.new { |rx| rx.build @states, @delta_star }
   end
 
+  def dfa_to_min(automat)
+    DFA.new { |a| a.build [], [], [], [], [] }.to_min automat
+  end
+
   private
 
   # alle bilder eine menge m unter r

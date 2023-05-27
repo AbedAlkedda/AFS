@@ -23,9 +23,9 @@ finals = [5]
 # starts = [1]
 # finals = [1]
 
-
 NFA.new do |a|
   a.build d_a, d_b, states, starts, finals
   # a.nfa_to_reg
-  a.to_dfa
+  dfa = a.to_dfa
+  a.dfa_to_min dfa
 end
