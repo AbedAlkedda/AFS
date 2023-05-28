@@ -6,6 +6,10 @@ require_relative 'automata'
 class DFA < Automata
   attr_accessor :delta_star, :states, :finals, :start
 
+  # ToDo
+  # R1
+  # R2
+
   def to_min
     finals = _finals
     states = _states
@@ -15,8 +19,7 @@ class DFA < Automata
       memo[elt] = states[elt]
     end
 
-    puts "\nF=#{f.inspect}"
-    puts "\nR0=#{r0.inspect}"
+    _print f, r0, finals, states
   end
 
   private
@@ -55,5 +58,13 @@ class DFA < Automata
     h = r
     @states[1] = @states[2]
     @states[2] = h
+  end
+
+  def _print(f, r0, finals, states)
+    puts "F=#{f.inspect}"
+    puts "R0=#{r0.inspect}"
+    f_equivalent = finals.flat_map { |s| states.values_at(s) }
+    q_without_f  = (@states - (@states & finals)).flat_map{ |s| states.values_at(s) }
+    puts "{F, Q\\F }={#{f_equivalent}}, {#{q_without_f}}"
   end
 end
