@@ -83,7 +83,7 @@ class DFA < Automata
       r = _r finals, states, steps["r#{l}"]
       steps["r#{l + 1}"] = r
 
-      return steps if steps["r#{l - 1}"] == r && (l - 1).positive?
+      return steps if steps["r#{l}"] == r
     end
   end
 
