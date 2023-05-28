@@ -26,7 +26,7 @@ class Automata
   end
 
   # Concatenation two states
-  # Example: [[1,2]] . [[2, 1]] => [1, 1]
+  # Example: [[1, 2]] . [[2, 1]] => [1, 1]
   def compose(lft, rgt)
     lft.flat_map { |x, y1| rgt.select { |y2, _| y1 == y2 }.map { |_, z| [x, z] } }
   end
