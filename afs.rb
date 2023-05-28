@@ -25,4 +25,6 @@ NFA.new do |a|
   puts
   dfa = a.to_dfa
   a.dfa_to_min dfa
+  puts "\nnfa to reg"
+  a.nfa_to_reg
 end

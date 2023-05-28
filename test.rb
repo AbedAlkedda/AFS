@@ -30,7 +30,7 @@ def pumping_lemma(language, word, n)
     s = word[i...i + n]
     t = word[i + n..]
 
-    break if s.length.positive? && (r + s * 2 + t) != word && language.call(r + s * 2 + t)
+    break if s.length.positive? && (r + s * 10 + t) != word && language.call(r + s * 10 + t)
   end
 
   # Return the values for r, s, and t
