@@ -29,7 +29,6 @@ class DFA < Automata
   end
 
   def _r0(finals, states)
-    (@states - (@states & finals))
     r0 = []
     @states.each_with_index do |p, _|
       @states.each_with_index do |q, _|
