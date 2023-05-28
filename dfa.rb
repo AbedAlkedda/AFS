@@ -17,7 +17,7 @@ class DFA < Automata
     steps       = _steps_builder finals, states, steps
 
     _print finals_hash, r0, finals, states
-    _print_steps steps
+    _print steps
   end
 
   private
@@ -97,7 +97,7 @@ class DFA < Automata
     puts "{F, Q\\F }={#{f_equivalent}}, {#{q_without_f}}"
   end
 
-  def _print_steps(steps)
+  def _print(steps)
     steps.each { |k, v| puts "#{k}=#{v}" }
   end
 
