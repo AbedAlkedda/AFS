@@ -64,7 +64,7 @@ class DFA < Automata
     puts "F=#{f.inspect}"
     puts "R0=#{r0.inspect}"
     f_equivalent = finals.flat_map { |s| states.values_at(s) }
-    q_without_f  = (@states - (@states & finals)).flat_map{ |s| states.values_at(s) }
+    q_without_f  = (@states - (@states & finals)).flat_map { |s| states.values_at(s) }
     puts "{F, Q\\F }={#{f_equivalent}}, {#{q_without_f}}"
   end
 end
