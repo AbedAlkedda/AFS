@@ -1,4 +1,4 @@
-# require 'byebug'
+require 'byebug'
 
 # def shuffle(u, v)
 #   return [v] if u.empty?
@@ -20,7 +20,7 @@
 # shuffled_words = shuffle(u, v)
 # puts shuffled_words.inspect
 
-def pumping_lemma(language, word, n)
+def pumping_lemma(lang, word, n, k)
   r = ''
   s = ''
   t = ''
@@ -30,26 +30,24 @@ def pumping_lemma(language, word, n)
     s = word[i...i + n]
     t = word[i + n..]
 
-    break if s.length.positive? && (r + s * 10 + t) != word && language.call(r + s * 10 + t)
+    break if s.length.positive? && (r + s * k + t) != word && lang.call(r + s * k + t)
   end
-
-  # Return the values for r, s, and t
   [r, s, t]
 end
 
-language = ->(w) { w.count('b').even? }
-language_2 = ->(w) { w.count('b') == w.count('a') }
-
 # a^* b^*
-# language = ->(w) { w.match?(/\Aa*b*\z/) }
+lang1 = ->(w) { w.match?(/\Aa*b*\z/) }
+word_lang1 = 'aaabbb'
+
+u, v, w = pumping_lemma(lang1, word_lang1, 2, 20)
+puts "( \"#{word_lang1}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
 
 # { a^i b^j | i /= j }
-# language = ->(w) { w.count('a') != w.count('b') }
+lang2 = ->(w) { w.count('a') != w.count('b') }
+word_lang2 = %w[aaaaaabb aaaaaabbbb aaaaabbb aaabbbb aaabbbbb aabbbb]
 
-word = 'aaaaabbbbb'
-
-n = 2
-
-u, v, w = pumping_lemma(language_2, word, n)
-
-puts "( \"#{word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}}\" )"
+puts "\nTask 2\n"
+word_lang2.each do |word|
+  u, v, w = pumping_lemma(lang2, word, 2, 20)
+  puts ",( \"#{word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
+end
