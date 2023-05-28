@@ -6,10 +6,6 @@ require_relative 'automata'
 class DFA < Automata
   attr_accessor :delta_star, :states, :finals, :start
 
-  # ToDo
-  # R1
-  # R2
-
   def to_min
     finals = _finals
     states = _states
@@ -17,17 +13,11 @@ class DFA < Automata
     steps  = {}
 
     steps['r0'] = r0
-
     finals_hash = _finals_hash finals, states
-
-    0.upto(30) do |l|
-      r = _r finals, states, steps["r#{l}"]
-      steps["r#{l + 1}"] = r
-
-      break if steps["r#{l - 1}"] == r && (l - 1).positive?
-    end
+    steps       = _steps_builder finals, states, steps
 
     _print finals_hash, r0, finals, states
+    _print_steps steps
   end
 
   private
@@ -88,6 +78,15 @@ class DFA < Automata
     @states[2] = h
   end
 
+  def _steps_builder(finals, states, steps)
+    0.upto(1_000) do |l|
+      r = _r finals, states, steps["r#{l}"]
+      steps["r#{l + 1}"] = r
+
+      return steps if steps["r#{l - 1}"] == r && (l - 1).positive?
+    end
+  end
+
   def _print(finals_hash, r0, finals, states)
     puts "F=#{finals_hash.inspect}"
 
@@ -96,6 +95,10 @@ class DFA < Automata
     f_equivalent = finals.flat_map { |s| states.values_at(s) }
     q_without_f  = (@states - (@states & finals)).flat_map { |s| states.values_at(s) }
     puts "{F, Q\\F }={#{f_equivalent}}, {#{q_without_f}}"
+  end
+
+  def _print_steps(steps)
+    steps.each { |k, v| puts "#{k}=#{v}" }
   end
 
   def _ri_set(states, c, p, q)
