@@ -12,11 +12,11 @@ class DFA < Automata
     r0     = _r0 finals, states
     steps  = {}
 
-    steps['r0'] = r0
+    steps['R0'] = r0
     finals_hash = _finals_hash finals, states
     steps       = _steps_builder finals, states, steps
 
-    _print finals_hash, r0, finals, states
+    _print finals_hash, finals, states
     _print_steps steps
   end
 
@@ -80,17 +80,15 @@ class DFA < Automata
 
   def _steps_builder(finals, states, steps)
     0.upto(1_000) do |l|
-      r = _r finals, states, steps["r#{l}"]
-      steps["r#{l + 1}"] = r
+      r = _r finals, states, steps["R#{l}"]
+      steps["R#{l + 1}"] = r
 
-      return steps if steps["r#{l}"] == r
+      return steps if steps["R#{l}"] == r
     end
   end
 
-  def _print(finals_hash, r0, finals, states)
+  def _print(finals_hash, finals, states)
     puts "F=#{finals_hash.inspect}"
-
-    puts "R0=#{r0.inspect}"
 
     f_equivalent = finals.flat_map { |s| states.values_at(s) }
     q_without_f  = (@states - (@states & finals)).flat_map { |s| states.values_at(s) }
