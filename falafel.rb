@@ -3,7 +3,7 @@
 require_relative 'rx'
 
 # Practice some stuff out Theorithsche Informatik
-class Automata
+class Falafel
   def self.new
     instance = allocate
     yield instance

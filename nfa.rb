@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require_relative 'dfa'
-require_relative 'automata'
+require_relative 'falafel'
 
 # NFA class
-class NFA < Automata
+class NFA < Falafel
   def to_dfa
     dfa = nfa_to_dfa
 

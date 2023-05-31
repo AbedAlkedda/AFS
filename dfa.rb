@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'automata'
+require_relative 'falafel'
 
 # DFA class
-class DFA < Automata
+class DFA < Falafel
   attr_accessor :delta_star, :states, :finals, :start
 
   def to_min
