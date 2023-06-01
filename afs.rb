@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require_relative 'falafel'
-require_relative 'nfa'
+require_relative 'dfa'
 require_relative 'pump'
 
-require 'awesome_print'
 require 'byebug'
 
 d_a    = [[1, 1], [2, 2], [2, 1]]

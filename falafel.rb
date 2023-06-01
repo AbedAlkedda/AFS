@@ -2,7 +2,9 @@
 
 require_relative 'rx'
 
-# Practice some stuff out Theorithsche Informatik
+# Convert NFA to DFA
+# DFA to REG
+# Minimize DFA
 class Falafel
   def self.new
     instance = allocate
