@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
 require_relative 'falafel'
-require_relative 'nfa'
+require_relative 'dfa'
 require_relative 'pump'
 
-require 'awesome_print'
 require 'byebug'
 
 d_a    = [[1, 1], [2, 2], [2, 1]]
 d_b    = [[1, 2]]
 states = [1, 2]
 starts = [1]
-finals = [2]
+finals = [1]
 
 # d_a    = [[1, 1], [2, 1]]
 # d_b    = [[1, 2]]
@@ -50,3 +49,10 @@ words.each do |word|
   u, v, w = pump.run
   puts ",( \"#{word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
 end
+
+# a(aa)^*
+pump.lang = ->(w) { w.match?(/a(aa)*/) }
+pump.word = 'aaa'
+puts "\nTask 3\n"
+u, v, w = pump.run
+puts "( \"#{pump.word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"

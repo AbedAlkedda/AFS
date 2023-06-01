@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'falafel'
-
 # DFA class
 class DFA < Falafel
   attr_accessor :delta_star, :states, :finals, :start
