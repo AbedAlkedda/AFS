@@ -50,3 +50,10 @@ words.each do |word|
   u, v, w = pump.run
   puts ",( \"#{word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
 end
+
+# a(aa)^*
+pump.lang = ->(w) { w.match?(/a(aa)*/) }
+pump.word = 'aaa'
+puts "\nTask 3\n"
+u, v, w = pump.run
+puts "( \"#{pump.word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
