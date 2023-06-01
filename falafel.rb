@@ -76,6 +76,8 @@ class Falafel
     end
     dfa.finals.uniq!
 
+    _print_dfa dfa
+
     dfa
   end
 
@@ -111,5 +113,11 @@ class Falafel
     lft = _concat state
 
     [res, rgt, lft]
+  end
+
+  def _print_dfa(dfa)
+    puts "dfa:\nfinals: #{dfa.finals.map { |ele| _concat(ele).to_i }}"
+    puts "states: #{dfa.states.map(&:to_i)}"
+    dfa.delta_star.each { |k, v| v.each { |e| puts "(#{e[0]} ,'#{k}', #{e[1]})" } }
   end
 end
