@@ -50,9 +50,9 @@ class RX
 
   def _l(l, p, q, h)
     case [h == p, h == q]
-    when [true, true]  then _states_equal l, h
-    when [true, false] then _states_begin  l, h, q
-    when [false, true] then _states_end l, h, p
+    in [true, true]  then _states_equal l, h
+    in [true, false] then _states_begin  l, h, q
+    in [false, true] then _states_end l, h, p
     else _states_unequal l, p, q, h
     end
   end

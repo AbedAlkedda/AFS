@@ -13,7 +13,8 @@ class Falafel
     instance
   end
 
-  def build(d_a, d_b, states, starts, finals)
+  def build(*args, states:, starts:, finals:)
+    d_a, d_b    = args
     @delta_star = { a: d_a, b: d_b }
     @state_set  = power_set states
     @finals     = finals
@@ -46,7 +47,7 @@ class Falafel
   end
 
   def nfa_to_dfa
-    dfa = DFA.new { |a| a.build [], [], [], @start, [] }
+    dfa = DFA.new { |a| a.build [], [], states: [], starts: @start, finals: [] }
     reachable     = []
     done_state    = []
     current_state = @start
@@ -94,7 +95,7 @@ class Falafel
     starts = automat.start
     finals = automat.finals
 
-    dfa = DFA.new { |a| a.build d_a, d_b, states, starts, finals }
+    dfa = DFA.new { |a| a.build d_a, d_b, states: states, starts: starts, finals: finals }
     dfa.to_min
   end
 

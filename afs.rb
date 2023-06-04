@@ -19,7 +19,7 @@ finals = [1]
 # finals = [2]
 
 Falafel.new do |a|
-  a.build d_a, d_b, states, starts, finals
+  a.build d_a, d_b, states: states, starts: starts, finals: finals
   puts 'crossboss:'
   a.potens_set
   puts
