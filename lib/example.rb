@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-require 'falafel'
+require  'falafel'
 
 d_a    = [[1, 1], [2, 2], [2, 1]]
 d_b    = [[1, 2]]
 states = [1, 2]
 starts = [1]
 finals = [1]
-
-# d_a    = [[1, 1], [2, 1]]
-# d_b    = [[1, 2]]
-# states = [1, 2]
-# starts = [1]
-# finals = [2]
 
 Falafel.new do |a|
   a.build d_a, d_b, states: states, starts: starts, finals: finals
