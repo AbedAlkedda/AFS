@@ -101,6 +101,9 @@ class Falafel
   end
 
   def pump_lemma
+    require_relative 'pump'
+
+    Pump.new lang: nil, word: nil, n: 2, k: 20
   end
 
   private
