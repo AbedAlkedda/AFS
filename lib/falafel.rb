@@ -47,6 +47,8 @@ class Falafel
   end
 
   def nfa_to_dfa
+    require_relative 'dfa'
+
     dfa = DFA.new { |a| a.build [], [], states: [], starts: @start, finals: [] }
     reachable     = []
     done_state    = []
@@ -97,6 +99,9 @@ class Falafel
 
     dfa = DFA.new { |a| a.build d_a, d_b, states: states, starts: starts, finals: finals }
     dfa.to_min
+  end
+
+  def pump_lemma
   end
 
   private

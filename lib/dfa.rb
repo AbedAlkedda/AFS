@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'falafel'
+
 # DFA class
 class DFA < Falafel
   attr_accessor :delta_star, :states, :finals, :start
@@ -26,7 +28,6 @@ class DFA < Falafel
 
   def _states
     ltr = 'p'
-    _swap_for_demo
     states = @states.each_with_object({}) do |elt, memo|
       memo[elt] = ltr
       ltr       = ltr.succ
@@ -67,13 +68,6 @@ class DFA < Falafel
     r.uniq!
 
     r
-  end
-
-  def _swap_for_demo
-    r = @states[1]
-    h = r
-    @states[1] = @states[2]
-    @states[2] = h
   end
 
   def _steps_builder(finals, states, steps)
