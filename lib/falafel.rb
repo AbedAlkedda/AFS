@@ -20,7 +20,6 @@ class Falafel
     @finals     = finals
     @states     = states
     @start      = starts
-    @epsilon    = "\u2205"
   end
 
   # Binary relation for max number

@@ -12,7 +12,7 @@ class RX
   def build(states, delta_star)
     @states     = states
     @delta_star = delta_star
-    @epsilon    = "\u2205"
+    @empty      = "\u2205"
     _to_reg
   end
 
@@ -91,7 +91,7 @@ class RX
     lft    = l[h][q]
     rgt    = _clear_reg l[h][h]
     letter = "#{lft}.(#{rgt})*"
-    letter = @epsilon if lft == @epsilon || rgt == @epsilon
+    letter = @empty if lft == @empty || rgt == @empty
 
     letter
   end
@@ -100,7 +100,7 @@ class RX
     lft    = _clear_reg l[h][h]
     rgt    = l[h][p]
     letter = "(#{lft})*.#{rgt}"
-    letter = @epsilon if lft == @epsilon || rgt == @epsilon
+    letter = @empty if lft == @empty || rgt == @empty
 
     letter
   end
@@ -116,7 +116,7 @@ class RX
 
     return "(#{rgt})" if lft.empty?
 
-    rgt == @epsilon ? lft : "#{lft}+(#{rgt})"
+    rgt == @empty ? lft : "#{lft}+(#{rgt})"
   end
 
   def _state_simplify(l, h)
@@ -128,13 +128,13 @@ class RX
   end
 
   def _empty?(state)
-    state == @epsilon
+    state == @empty
   end
 
   def _states_unequal_rgt(l, p, q, h)
     letter = _clear_reg l[h][h]
     rgt    = "#{l[h][q]}.(#{letter})*.#{l[p][h]}"
-    rgt    = @epsilon if _empty?(l[p][h]) || _empty?(l[h][h]) || _empty?(l[h][q])
+    rgt    = @empty if _empty?(l[p][h]) || _empty?(l[h][h]) || _empty?(l[h][q])
 
     rgt
   end
