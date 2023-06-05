@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 # Pump Lemma
+# It takes language as lambda function and a word as a string
+# n is the length of the string you want to pump
+# k is the potens of the middle word
 class Pump
   attr_accessor :lang, :word
 
-  def initialize(lang, word, n, k)
+  def initialize(lang:, word:, n:, k:)
     @lang = lang
     @word = word
     @n    = n
