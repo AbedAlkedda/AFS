@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.version = '0.0.0.1'
+  s.version = '0.0.0.2'
   s.authors = ['Abed A']
   s.files   = Dir['lib/**/*.rb']
   s.files.reject! { |fn| fn.include? 'example' }

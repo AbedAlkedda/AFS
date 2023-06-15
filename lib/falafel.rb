@@ -106,6 +106,12 @@ class Falafel
     Pump.new lang: nil, word: nil, n: 2, k: 20
   end
 
+  def cfg(alphabet, vars_set, start_var, rules)
+    require_relative 'cfg'
+
+    CFG.new alphabet, vars_set, start_var, rules
+  end
+
   private
 
   # alle bilder eine menge m unter r

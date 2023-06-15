@@ -19,7 +19,7 @@ Falafel.new do |a|
   a.nfa_to_reg
 end
 
-pump = Falafel.new{}.pump_lemma
+pump = Falafel.new {}.pump_lemma
 
 # a^* b^*
 pump.lang = ->(w) { w.match?(/\Aa*b*\z/) }
