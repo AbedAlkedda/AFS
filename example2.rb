@@ -11,7 +11,7 @@ rules['S'] << ['bSc']
 cfg = Falafel.new {}.cfg alphabet, vars_set, start_var, rules
 
 # {a^x b^y c^x+y | x, y ∈ N}
-reg2 = ->(w) { (w.count('a') + w.count('b') == w.count('c')) && (w[0] == 'a' && w[-1] == 'c' || (w[0] == 'b' && w[-1] == 'c') || w.empty? ) }
+reg2 = ->(w) { (w.count('a') + w.count('b') == w.count('c')) && ( w.match(/\Aa*b*c*\z/)) }
 
 cfg.lang = reg2
 
