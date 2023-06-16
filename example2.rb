@@ -16,6 +16,6 @@ reg2 = ->(w) { (w.count('a') + w.count('b') == w.count('c')) && ( w.match(/\A(a*
 
 cfg.lang = reg2
 
-100.times { cfg.generate_random }
+100.times { cfg.generate_word }
 
 cfg.rnd_words.sort!.each { |wrd| p wrd }

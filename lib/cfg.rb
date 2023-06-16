@@ -15,7 +15,7 @@ class CFG
     @rnd_words = []
   end
 
-  def generate_random
+  def generate_word
     word = _expand @start_var
 
     return unless @lang.call word
