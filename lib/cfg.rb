@@ -26,7 +26,7 @@ class CFG
     @rnd_words << word unless @rnd_words.include? word
   end
 
-  def chomsky_nf
+  def chomsky_as_nf
     rule_name = ''
 
     @rules.each do |start, rl|
