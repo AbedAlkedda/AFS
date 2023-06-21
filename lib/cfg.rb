@@ -2,6 +2,7 @@
 
 # Samll CFG impletation
 # Generate words and check if words are the @lang
+# generates random words
 class CFG
   attr_accessor :alphabet, :vars, :start_var, :rules
   attr_reader   :rnd_words
@@ -45,7 +46,7 @@ class CFG
 
     return symbol if production.nil?
 
-    rhs = production.sample
+    rhs = production.sample # pcik up a random element from array
     rhs.map { |s| _expand(s) }.join
   end
 
