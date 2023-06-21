@@ -50,8 +50,24 @@ class CFG
         @chomsky_nf[rule_name] = rules_new
       end
     end
+  end
 
-    puts @chomsky_nf
+  def epsilon_clear
+    @rules.each do |key, rule|
+      return false unless rule.include? []
+
+      res    = []
+      s_rule = ''
+      rule.select { |x| x unless x.empty? }.each do |sub_rule|
+        s_rule  = sub_rule.join ''
+
+        s_index = _s_index s_rule
+
+        s_index.each do |cond|
+          p cond
+        end
+      end
+    end
   end
 
   def dyck?(word)
@@ -86,17 +102,20 @@ class CFG
     rules.each_value { |k| k.each_with_index { |item, index| k[index] = item[0].is_a?(String) ? item[0].split('') : item } }
   end
 
-  # Chomskay start
-  def _var
-    'var'
+  def _s_index(s_rule)
+    s_index = []
+    s_rule.each_char.with_index { |char, index| s_index << index if char == 'S' }
+
+    _power_set s_index
   end
 
-  def _replace_alphabet
-    'replace'
+  def _power_set(set)
+    if set.empty?
+      [[]]
+    else
+      element = set[0]
+      subsets = _power_set set[1..]
+      subsets + subsets.map { |subset| [element] + subset }
+    end
   end
-
-  def _replace_rules
-    'rules'
-  end
-  # Chomskay end
 end
