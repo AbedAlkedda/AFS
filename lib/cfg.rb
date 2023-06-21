@@ -23,6 +23,10 @@ class CFG
     @rnd_words << word unless @rnd_words.include? word
   end
 
+  def dyck?(word)
+    ->(w) { (w.count('a') - w.count('b')).zero? }.call word
+  end
+
   private
 
   def _expand(symbol)
