@@ -5,16 +5,17 @@
 # generates random words
 class CFG
   attr_accessor :alphabet, :vars, :start_var, :rules
-  attr_reader   :rnd_words
+  attr_reader   :rnd_words, :chomsky_nf
   attr_writer   :lang
 
   def initialize(alphabet, vars, start_var, rules)
-    @alphabet  = alphabet
-    @vars      = vars
-    @start_var = start_var
-    @rules     = _rules rules
-    @rnd_words = []
-    @lang      = ->(w) { w.count('a') == w.count('b') }
+    @alphabet   = alphabet
+    @vars       = vars
+    @start_var  = start_var
+    @rules      = _rules rules
+    @rnd_words  = []
+    @lang       = ->(w) { w.count('a') == w.count('b') }
+    @chomsky_nf = {}
   end
 
   def generate_word
@@ -25,14 +26,32 @@ class CFG
     @rnd_words << word unless @rnd_words.include? word
   end
 
-  def chomsky
-    # - neue Variablen va für a ∈ Σ und Regeln (va, a)
-    # - für jede Regel (l, r) mit r ∈ (V ∪ Σ)^≥2 in r jeden
-    #   Buchstaben a durch Variable va ersetzen
-    # - kede Regel (l, r) mit r = r1r2 . . . rk ∈ V^k für k > 2:
-    #   ersetzen durch Regeln (mit Hilfsvariablen h2, . . . , hk−1)
-    #   (l, r1h2), (h2, r2h3), . . . , (hk−1, rk−1rk)
-    'chom chom'
+  def chomsky_nf
+    rule_name = ''
+
+    @rules.each do |start, rl|
+      rl.each do |r|
+        next if r.size <= 2
+
+        rule_name, rule_up, index,rules_new = _chomsky_nf_vars r
+        lft ||= start
+
+        2.upto(rule_up.size) do |h_num|
+          rgt = "#{rule_up[index]}h#{h_num}"
+          rgt = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
+
+          rules_new << "(#{lft}, #{rgt})"
+
+          lft = "h#{h_num}"
+          index += 1
+        end
+        _chomsky_nf_update_alphabet rules_new
+
+        @chomsky_nf[rule_name] = rules_new
+      end
+    end
+
+    puts @chomsky_nf
   end
 
   def dyck?(word)
@@ -40,6 +59,19 @@ class CFG
   end
 
   private
+
+  def _chomsky_nf_update_alphabet(rules_new)
+    @alphabet.map { |w| "(#{w.upcase}, #{w})" }.each { |n| rules_new.unshift(n) }
+  end
+
+  def _chomsky_nf_vars(r)
+    rule_name = r.join('')
+    rule_up   = r.join('').upcase
+    index     = 0
+    rules_new = []
+
+    [rule_name, rule_up, index, rules_new]
+  end
 
   def _expand(symbol)
     production = @rules[symbol]
