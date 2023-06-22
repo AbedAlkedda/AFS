@@ -5,7 +5,7 @@
 # generates random words
 class CFG
   attr_accessor :alphabet, :vars, :start_var, :rules
-  attr_reader   :rnd_words, :chomsky_nf
+  attr_reader   :rnd_words, :chomsky_nf, :rules_ef
   attr_writer   :lang
 
   def initialize(alphabet, vars, start_var, rules)
@@ -14,8 +14,9 @@ class CFG
     @start_var  = start_var
     @rules      = _rules rules
     @rnd_words  = []
-    @lang       = ->(w) { w.count('a') == w.count('b') }
+    @lang       = ->(w) { w.count('a') == w.count('b') } # Default reg a^nb^n
     @chomsky_nf = {}
+    @rules_ef   = {} # Rules Epsilon free
   end
 
   def generate_word
@@ -33,7 +34,7 @@ class CFG
       rl.each do |r|
         next if r.size <= 2
 
-        rule_name, rule_up, index,rules_new = _chomsky_nf_vars r
+        rule_name, rule_up, index, rules_new = _chomsky_nf_vars r
         lft ||= start
 
         2.upto(rule_up.size) do |h_num|
@@ -73,14 +74,13 @@ class CFG
 
           next unless cond.size >= 2
 
-          holder = sub_rule
+          holder = sub_rule.clone
           cond.reverse.map { |i| holder.delete_at i }
           gramer << holder.join('')
         end
       end
     end
-
-    gramer
+    @rules_ef['S'] = gramer
   end
 
   def dyck?(word)
