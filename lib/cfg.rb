@@ -53,21 +53,34 @@ class CFG
   end
 
   def epsilon_clear
-    @rules.each do |key, rule|
+    gramer = []
+
+    @rules.each do |_, rule|
       return false unless rule.include? []
 
-      res    = []
       s_rule = ''
       rule.select { |x| x unless x.empty? }.each do |sub_rule|
-        s_rule  = sub_rule.join ''
+        s_rule = sub_rule.join ''
 
-        s_index = _s_index s_rule
+        (_s_index s_rule).each do |cond|
+          gramer << s_rule if cond.empty?
 
-        s_index.each do |cond|
-          p cond
+          if cond.size == 1
+            boo = sub_rule.join ''
+            boo.slice!(cond[0])
+            gramer << boo
+          end
+
+          next unless cond.size >= 2
+
+          holder = sub_rule
+          cond.reverse.map { |i| holder.delete_at i }
+          gramer << holder.join('')
         end
       end
     end
+
+    gramer
   end
 
   def dyck?(word)
