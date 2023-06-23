@@ -58,7 +58,7 @@ class CFG
     @rules_ef['S'] = grammer
   end
 
-  def chomsky_var(rules)
+  def chomsky_run(rules)
     @res = {}
     rules['S'].each do |r|
       @res[r] = _chomsky_as_nf(r)
@@ -76,16 +76,7 @@ class CFG
   def _chomsky_as_nf(rule)
     return {} if rule.size <= 2
 
-    rule_up, index, rules_new = _chomsky_nf_vars rule
-    lft ||= 'S'
-
-    2.upto(rule_up.size) do |h_num|
-      rgt = _chomsky_rgt rule_up, index, h_num
-      rules_new << { lft.to_s => rgt }
-      lft    = (@letter.ord - 1).chr
-      index += 1
-    end
-
+    rules_new = _build_chomsky rule
     _check_loop rules_new
 
     rules_new
@@ -97,6 +88,20 @@ class CFG
     @letter = @letter.succ
 
     rgt
+  end
+
+  def _build_chomsky(rule)
+    rule_up, index, rules_new = _chomsky_nf_vars rule
+    lft ||= 'S'
+
+    2.upto(rule_up.size) do |h_num|
+      rgt = _chomsky_rgt rule_up, index, h_num
+      rules_new << { lft.to_s => rgt }
+      lft    = (@letter.ord - 1).chr
+      index += 1
+    end
+
+    rules_new
   end
 
   def _check_loop(rules_new)
