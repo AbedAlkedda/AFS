@@ -27,30 +27,6 @@ class CFG
     @rnd_words << word unless @rnd_words.include? word
   end
 
-  def chomsky_as_nf(rule)
-    rule_name = ''
-
-    rule.each do |start, rl|
-      rl.each do |r|
-        next if r.size <= 2
-
-        rule_name, rule_up, index, rules_new = _chomsky_nf_vars r
-        lft ||= start
-
-        2.upto(rule_up.size) do |h_num|
-          rgt = "#{rule_up[index]}h#{h_num}"
-          rgt = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
-
-          rules_new << "(#{lft}, #{rgt})"
-
-          lft = "h#{h_num}"
-          index += 1
-        end
-        @chomsky_nf[rule_name] = rules_new
-      end
-    end
-  end
-
   def epsilon_clear
     grammer = []
 
@@ -81,23 +57,49 @@ class CFG
     @rules_ef['S'] = grammer
   end
 
+  def chomsky_var(rules)
+    res = {}
+    rules['S'].each do |r|
+      res[r] = _chomsky_as_nf(r)
+    end
+
+    puts res
+  end
+
   def dyck?(word)
     ->(w) { (w.count('a') - w.count('b')).zero? }.call word
   end
 
   private
 
-  # def _chomsky_nf_update_alphabet(rules_new)
-  #   @alphabet.map { |w| "(#{w.upcase}, #{w})" }.each { |n| rules_new.unshift(n) }
-  # end
+  def _chomsky_as_nf(rule)
+    return {} if rule.size <= 2
+
+    rule_up, index, rules_new = _chomsky_nf_vars rule
+    lft ||= 'S'
+
+    2.upto(rule_up.size) do |h_num|
+      rules_new << { "#{lft}": _chomsky_rgt(rule_up, index, h_num) }
+      lft = "h#{h_num}"
+      index += 1
+    end
+
+    rules_new
+  end
+
+  def _chomsky_rgt(rule_up, index, h_num)
+    rgt = "#{rule_up[index]}h#{h_num}"
+    rgt = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
+
+    rgt
+  end
 
   def _chomsky_nf_vars(r)
-    rule_name = r.join('')
-    rule_up   = r.join('').upcase
+    rule_up   = r.upcase
     index     = 0
     rules_new = []
 
-    [rule_name, rule_up, index, rules_new]
+    [rule_up, index, rules_new]
   end
 
   def _expand(symbol)
