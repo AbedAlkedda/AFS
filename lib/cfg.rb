@@ -60,10 +60,10 @@ class CFG
 
   def chomsky_run(rules)
     @res = {}
-    rules['S'].each do |r|
-      @res[r] = _chomsky_as_nf(r)
-    end
 
+    rules['S'].each { |r| @res[r] = _chomsky_as_nf r }
+
+    _build_chomsky_nf
     puts @res
   end
 
@@ -102,6 +102,26 @@ class CFG
     end
 
     rules_new
+  end
+
+  def _build_chomsky_nf
+    # build Chomsky-Nf mit Nachnutzen von Hilfsvariablen
+    # G'' = ({a, b}, {S, A, B, H, I, K}, S, R) mit R = { }
+    @chomsky_nf['alphabet']  = @alphabet
+    @chomsky_nf['hlp_vars']  = _build_chomsky_nf_hlp_vars
+    @chomsky_nf['start_var'] = 'S'
+    @chomsky_nf['rules']     = []
+
+    # byebug
+
+    'asd'
+  end
+
+  def _build_chomsky_nf_hlp_vars
+    hlp_vars = %w[A B]
+    hlp_vars << @res.values.flatten.reject(&:empty?).map(&:keys).flatten.uniq
+
+    hlp_vars.flatten
   end
 
   def _check_loop(rules_new)
