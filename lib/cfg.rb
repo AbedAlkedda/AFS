@@ -81,21 +81,37 @@ class CFG
 
     2.upto(rule_up.size) do |h_num|
       rgt = _chomsky_rgt rule_up, index, h_num
-      rules_new << { "#{lft}": rgt }
+      rules_new << { lft.to_s => rgt }
       lft    = (@letter.ord - 1).chr
       index += 1
     end
-    # byebug
+
+    _check_loop rules_new
 
     rules_new
   end
 
   def _chomsky_rgt(rule_up, index, h_num)
-    rgt = "#{rule_up[index]}#{@letter}"
-    rgt = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
+    rgt     = "#{rule_up[index]}#{@letter}"
+    rgt     = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
     @letter = @letter.succ
 
     rgt
+  end
+
+  def _check_loop(rules_new)
+    @res.each do |_, solutions|
+      solutions.each do |solution|
+        solution.each do |sol_key, sol_val|
+          rules_new.each_with_index do |rule, index|
+            rule.each do |rul_key, rul_val|
+              rule.delete(rul_key) if rul_val == sol_val
+              rules_new[index - 1].values[0][1] = sol_key if rul_val == sol_val
+            end
+          end
+        end
+      end
+    end
   end
 
   def _chomsky_nf_vars(r)
