@@ -17,6 +17,7 @@ class CFG
     @lang       = ->(w) { w.count('a') == w.count('b') } # Default reg a^nb^n
     @chomsky_nf = {}
     @rules_ef   = {} # Rules Epsilon free
+    @letter     = 'H'
   end
 
   def generate_word
@@ -58,12 +59,12 @@ class CFG
   end
 
   def chomsky_var(rules)
-    res = {}
+    @res = {}
     rules['S'].each do |r|
-      res[r] = _chomsky_as_nf(r)
+      @res[r] = _chomsky_as_nf(r)
     end
 
-    puts res
+    puts @res
   end
 
   def dyck?(word)
@@ -79,17 +80,20 @@ class CFG
     lft ||= 'S'
 
     2.upto(rule_up.size) do |h_num|
-      rules_new << { "#{lft}": _chomsky_rgt(rule_up, index, h_num) }
-      lft = "h#{h_num}"
+      rgt = _chomsky_rgt rule_up, index, h_num
+      rules_new << { "#{lft}": rgt }
+      lft    = (@letter.ord - 1).chr
       index += 1
     end
+    # byebug
 
     rules_new
   end
 
   def _chomsky_rgt(rule_up, index, h_num)
-    rgt = "#{rule_up[index]}h#{h_num}"
+    rgt = "#{rule_up[index]}#{@letter}"
     rgt = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
+    @letter = @letter.succ
 
     rgt
   end
