@@ -110,11 +110,7 @@ class CFG
     @chomsky_nf['alphabet']  = @alphabet
     @chomsky_nf['hlp_vars']  = _build_chomsky_nf_hlp_vars
     @chomsky_nf['start_var'] = 'S'
-    @chomsky_nf['rules']     = []
-
-    # byebug
-
-    'asd'
+    @chomsky_nf['rules']     = _build_chomsky_nf_rules
   end
 
   def _build_chomsky_nf_hlp_vars
@@ -122,6 +118,10 @@ class CFG
     hlp_vars << @res.values.flatten.reject(&:empty?).map(&:keys).flatten.uniq
 
     hlp_vars.flatten
+  end
+
+  def _build_chomsky_nf_rules
+    @res.values.flatten.reject(&:empty?)
   end
 
   def _check_loop(rules_new)
