@@ -68,12 +68,8 @@ class CFG
 
   def cyk_run(word)
     matrix = _cyk_fill_diagonal word
-    puts matrix[0].inspect
-    puts matrix[1].inspect
-    puts matrix[2].inspect
-    puts matrix[3].inspect
 
-    _cyk
+    _cyk matrix
   end
 
   def dyck?(word)
@@ -120,6 +116,7 @@ class CFG
     @chomsky_nf['hlp_vars']  = _build_chomsky_nf_hlp_vars
     @chomsky_nf['start_var'] = 'S'
     @chomsky_nf['rules']     = _build_chomsky_nf_rules
+    @chomsky_nf['hlp_hash']  = _build_chomsky_nf_hlp_hash
   end
 
   def _build_chomsky_nf_hlp_vars
@@ -130,7 +127,22 @@ class CFG
   end
 
   def _build_chomsky_nf_rules
-    @res.values.flatten.reject(&:empty?)
+    res = @res.values.flatten.reject(&:empty?)
+    res << { 'A' => 'a' }
+    res << { 'B' => 'b' }
+  end
+
+  def _build_chomsky_nf_hlp_hash
+    res = {}
+    i = 0
+    @chomsky_nf['hlp_vars'].each do |h|
+      next if h == 'S'
+
+      i += 1
+      res[i] = h
+    end
+
+    res
   end
 
   def _check_loop(rules_new)
@@ -166,8 +178,21 @@ class CFG
     table
   end
 
-  def _cyk
-    'test'
+  def _cyk(matrix)
+    matrix.each_with_index do |val, i|
+      val.each_with_index do |v, j|
+        hh = ''
+        pp = ''
+        qq = ''
+
+        puts "fix M#{i + 1},#{j + 1}" if v.empty?
+      end
+    end
+
+    puts matrix[0].inspect
+    puts matrix[1].inspect
+    puts matrix[2].inspect
+    puts matrix[3].inspect
   end
 
   def _expand(symbol)
