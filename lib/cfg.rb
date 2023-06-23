@@ -27,10 +27,10 @@ class CFG
     @rnd_words << word unless @rnd_words.include? word
   end
 
-  def chomsky_as_nf
+  def chomsky_as_nf(rule)
     rule_name = ''
 
-    @rules.each do |start, rl|
+    rule.each do |start, rl|
       rl.each do |r|
         next if r.size <= 2
 
@@ -46,15 +46,13 @@ class CFG
           lft = "h#{h_num}"
           index += 1
         end
-        _chomsky_nf_update_alphabet rules_new
-
         @chomsky_nf[rule_name] = rules_new
       end
     end
   end
 
   def epsilon_clear
-    gramer = []
+    grammer = []
 
     @rules.each do |_, rule|
       return false unless rule.include? []
@@ -64,23 +62,23 @@ class CFG
         s_rule = sub_rule.join ''
 
         (_s_index s_rule).each do |cond|
-          gramer << s_rule if cond.empty?
+          grammer << s_rule if cond.empty?
 
           if cond.size == 1
-            boo = sub_rule.join ''
-            boo.slice!(cond[0])
-            gramer << boo
+            new_rule = sub_rule.join ''
+            new_rule.slice!(cond[0])
+            grammer << new_rule
           end
 
           next unless cond.size >= 2
 
           holder = sub_rule.clone
           cond.reverse.map { |i| holder.delete_at i }
-          gramer << holder.join('')
+          grammer << holder.join('')
         end
       end
     end
-    @rules_ef['S'] = gramer
+    @rules_ef['S'] = grammer
   end
 
   def dyck?(word)
@@ -89,9 +87,9 @@ class CFG
 
   private
 
-  def _chomsky_nf_update_alphabet(rules_new)
-    @alphabet.map { |w| "(#{w.upcase}, #{w})" }.each { |n| rules_new.unshift(n) }
-  end
+  # def _chomsky_nf_update_alphabet(rules_new)
+  #   @alphabet.map { |w| "(#{w.upcase}, #{w})" }.each { |n| rules_new.unshift(n) }
+  # end
 
   def _chomsky_nf_vars(r)
     rule_name = r.join('')
