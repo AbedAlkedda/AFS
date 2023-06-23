@@ -64,7 +64,16 @@ class CFG
     rules['S'].each { |r| @res[r] = _chomsky_as_nf r }
 
     _build_chomsky_nf
-    puts @res
+  end
+
+  def cyk_run(word)
+    matrix = _cyk_fill_diagonal word
+    puts matrix[0].inspect
+    puts matrix[1].inspect
+    puts matrix[2].inspect
+    puts matrix[3].inspect
+
+    _cyk
   end
 
   def dyck?(word)
@@ -145,6 +154,20 @@ class CFG
     rules_new = []
 
     [rule_up, index, rules_new]
+  end
+
+  def _cyk_fill_diagonal(word)
+    wrd_lng = word.length
+    table = Array.new(wrd_lng) { Array.new(wrd_lng) { [] } }
+    (0..wrd_lng - 1).each do |index|
+      table[index][index] = word[index].upcase
+    end
+
+    table
+  end
+
+  def _cyk
+    'test'
   end
 
   def _expand(symbol)
