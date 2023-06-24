@@ -130,6 +130,13 @@ class CFG
     res = @res.values.flatten.reject(&:empty?)
     res << { 'A' => 'a' }
     res << { 'B' => 'b' }
+    start_var = @res.keys.select { |x| x.size <= 2 }.select { |x| x == @alphabet.join('') }
+
+    start_var = start_var[0].upcase
+
+    res << { 'S' => start_var }
+
+    res
   end
 
   def _build_chomsky_nf_hlp_hash
@@ -179,20 +186,36 @@ class CFG
   end
 
   def _cyk(matrix)
-    matrix.each_with_index do |val, i|
-      val.each_with_index do |v, j|
-        hh = ''
-        pp = ''
-        qq = ''
+    # cntr = 0
+    # matrix.each_with_index do |val, i|
+    #   val.each_with_index do |v, j|
+    #     next unless i < j && !matrix[i, j].empty?
 
-        puts "fix M#{i + 1},#{j + 1}" if v.empty?
+    #     h_ = j - 1
+    #     lft = matrix[i][h_]
+    #     rgt = matrix[h_ + 1][j]
+    #     rule = "#{lft}#{rgt}"
+    #     matrix[i][j] = cntr
+    #     puts "find: #{rule}"
+    #     cntr += 1
+    #   end
+    # end
+    matrix.size.times do |limiter|
+      puts "diagonal:#{limiter}"
+      (0...matrix.length - limiter).each do |i|
+        puts "check: M#{i}, #{i + limiter}"
+        puts matrix[i][i + limiter]
       end
     end
 
-    puts matrix[0].inspect
-    puts matrix[1].inspect
-    puts matrix[2].inspect
-    puts matrix[3].inspect
+    _p_m matrix
+  end
+
+  def _p_m(m)
+    puts m[0].inspect
+    puts m[1].inspect
+    puts m[2].inspect
+    puts m[3].inspect
   end
 
   def _expand(symbol)
