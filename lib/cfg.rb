@@ -17,7 +17,10 @@ class CFG
     @lang       = ->(w) { w.count('a') == w.count('b') } # Default reg a^nb^n
     @chomsky_nf = {}
     @rules_ef   = {} # Rules Epsilon free
+
+    # Cyk
     @letter     = 'H'
+    @cyk_matrix = [[]]
   end
 
   def generate_word
@@ -67,9 +70,13 @@ class CFG
   end
 
   def cyk_run(word)
-    matrix = _cyk_fill_diagonal word
+    @cyk_matrix = _cyk_fill_diagonal word
 
-    _cyk matrix
+    _cyk
+  end
+
+  def print_cyk_matrix
+    puts @cyk_matrix.map(&:inspect)
   end
 
   def dyck?(word)
@@ -111,7 +118,6 @@ class CFG
 
   def _build_chomsky_nf
     # build Chomsky-Nf mit Nachnutzen von Hilfsvariablen
-    # G'' = ({a, b}, {S, A, B, H, I, K}, S, R) mit R = { }
     @chomsky_nf['alphabet']  = @alphabet
     @chomsky_nf['hlp_vars']  = _build_chomsky_nf_hlp_vars
     @chomsky_nf['start_var'] = 'S'
@@ -132,9 +138,10 @@ class CFG
     res << { 'B' => 'b' }
     start_var = @res.keys.select { |x| x.size <= 2 }.select { |x| x == @alphabet.join('') }
 
-    start_var = start_var[0].upcase
-
-    res << { 'S' => start_var }
+    unless start_var.empty?
+      start_var = start_var[0].upcase
+      res << { 'S' => start_var }
+    end
 
     res
   end
@@ -168,7 +175,7 @@ class CFG
   end
 
   def _chomsky_nf_vars(r)
-    rule_up   = r.upcase
+    rule_up   = r.is_a?(Array) ? r : r.upcase
     index     = 0
     rules_new = []
 
@@ -185,51 +192,36 @@ class CFG
     table
   end
 
-  def _cyk(matrix)
-
-    # cntr = 0
-    # matrix.each_with_index do |val, i|
-    #   val.each_with_index do |v, j|
-    #     next unless i < j && !matrix[i, j].empty?
-
-    #     h_ = j - 1
-    #     lft = matrix[i][h_]
-    #     rgt = matrix[h_ + 1][j]
-    #     rule = "#{lft}#{rgt}"
-    #     matrix[i][j] = cntr
-    #     puts "find: #{rule}"
-    #     cntr += 1
-    #   end
-    # end
-    matrix.size.times do |limiter|
-      (0...matrix.length - limiter).each do |i|
+  def _cyk
+    @cyk_matrix.size.times do |limiter|
+      (0...@cyk_matrix.length - limiter).each do |i|
         j = i + limiter
+
         next if i == j
 
-        h_   = j - 1
-        p_   = matrix[i][h_]
-        q_   = matrix[h_ + 1][j]
-        word = "#{p_}#{q_}"
-        val = chomsky_nf['rules'].select { |hash| hash.value?(word) }&.first&.key(word)
-        val ||= '#'
+        p_, q_ = _cyk_p_q i, j
 
-        matrix[i][j] = val
+        rule = "#{p_}#{q_}"
 
-        puts "for  M#{i}, #{i + limiter}:"
-        puts "print #{word}"
-        puts "h: #{h_}, p ele M#{i},#{h_}, q ele M#{h_ + 1},#{j}\n\n"
-        # byebug
+        @cyk_matrix[i][j] = _cyk_new_matrix_val rule
       end
     end
-
-    _p_m matrix
   end
 
-  def _p_m(m)
-    puts m[0].inspect
-    puts m[1].inspect
-    puts m[2].inspect
-    puts m[3].inspect
+  def _cyk_p_q(i, j)
+    h_   = j - 1
+    h_  -= 1 until @chomsky_nf['hlp_hash'].values.include? @cyk_matrix[i][h_]
+    p_   = @cyk_matrix[i][h_]
+    q_   = @cyk_matrix[h_ + 1][j]
+
+    [p_, q_]
+  end
+
+  def _cyk_new_matrix_val(rule)
+    val = @chomsky_nf['rules'].select { |hash| hash.value?(rule) }&.first&.key(rule)
+    val ||= '∅ '
+
+    val
   end
 
   def _expand(symbol)
