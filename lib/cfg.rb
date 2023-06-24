@@ -145,8 +145,8 @@ class CFG
     @chomsky_nf['hlp_vars'].each do |h|
       next if h == 'S'
 
-      i += 1
       res[i] = h
+      i += 1
     end
 
     res
@@ -186,6 +186,7 @@ class CFG
   end
 
   def _cyk(matrix)
+
     # cntr = 0
     # matrix.each_with_index do |val, i|
     #   val.each_with_index do |v, j|
@@ -201,10 +202,23 @@ class CFG
     #   end
     # end
     matrix.size.times do |limiter|
-      puts "diagonal:#{limiter}"
       (0...matrix.length - limiter).each do |i|
-        puts "check: M#{i}, #{i + limiter}"
-        puts matrix[i][i + limiter]
+        j = i + limiter
+        next if i == j
+
+        h_   = j - 1
+        p_   = matrix[i][h_]
+        q_   = matrix[h_ + 1][j]
+        word = "#{p_}#{q_}"
+        val = chomsky_nf['rules'].select { |hash| hash.value?(word) }&.first&.key(word)
+        val ||= '#'
+
+        matrix[i][j] = val
+
+        puts "for  M#{i}, #{i + limiter}:"
+        puts "print #{word}"
+        puts "h: #{h_}, p ele M#{i},#{h_}, q ele M#{h_ + 1},#{j}\n\n"
+        # byebug
       end
     end
 
