@@ -16,24 +16,36 @@ class RX
     _to_reg
   end
 
+  def print_matrix
+    @steps.each do |key, value|
+      puts key
+      max_width = value.map { |column| column.max_by(&:length).length }.max
+      value.transpose.each do |column|
+        column.each do |element|
+          printf("\t|%-#{max_width}s", element)
+        end
+        puts '|'
+      end
+    end
+  end
+
   private
 
   def _to_reg
     l0 = _l0
-    steps = {}
-    steps['l0'] = l0
+    @steps = {}
+    @steps['l0'] = l0
 
     @states.size.times do |h|
       l = []
       @states.each_with_index do |_, p|
         l[p] = []
         @states.each_with_index do |_, q|
-          l[p][q] = _l steps["l#{h}"], p, q, steps.size - 1
+          l[p][q] = _l @steps["l#{h}"], p, q, @steps.size - 1
         end
       end
-      steps["l#{steps.size}"] = l
+      @steps["l#{@steps.size}"] = l
     end
-    _print_matrix steps
   end
 
   def _l0
@@ -137,18 +149,5 @@ class RX
     rgt    = @empty if _empty?(l[p][h]) || _empty?(l[h][h]) || _empty?(l[h][q])
 
     rgt
-  end
-
-  def _print_matrix(steps)
-    steps.each do |key, value|
-      puts key
-      max_width = value.map { |column| column.max_by(&:length).length }.max
-      value.transpose.each do |column|
-        column.each do |element|
-          printf("\t|%-#{max_width}s", element)
-        end
-        puts '|'
-      end
-    end
   end
 end
