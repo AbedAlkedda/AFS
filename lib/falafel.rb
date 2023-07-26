@@ -86,7 +86,7 @@ class Falafel
   end
 
   def nfa_to_reg
-    RX.new { |rx| rx.build @states, @delta_star }
+    RX.new { |rx| rx.build @states, @delta_star, @start, @finals }
   end
 
   def dfa_to_min(automat)

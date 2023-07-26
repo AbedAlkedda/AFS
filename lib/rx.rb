@@ -2,6 +2,8 @@
 
 # Regex string builder
 class RX
+  attr_reader :final_reg
+
   def self.new
     instance = allocate
     yield instance
@@ -9,9 +11,11 @@ class RX
     instance
   end
 
-  def build(states, delta_star)
+  def build(states, delta_star, start, finals)
     @states     = states
     @delta_star = delta_star
+    @start      = start
+    @finals     = finals
     @empty      = "\u2205"
     _to_reg
   end
@@ -19,14 +23,21 @@ class RX
   def print_matrix
     @steps.each do |key, value|
       puts key
-      max_width = value.map { |column| column.max_by(&:length).length }.max
       value.transpose.each do |column|
         column.each do |element|
-          printf("\t|%-#{max_width}s", element)
+          printf("\t|%-#{value.map { |c| c.max_by(&:length).length }.max}s", element)
         end
         puts '|'
       end
     end
+    _final_reg
+  end
+
+  def _final_reg
+    start      = @start[0] - 1
+    final      = @finals[0] - 1
+    lang       = @steps["l#{@steps.size - 1}"]
+    @final_reg = lang[start][final]
   end
 
   private
