@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |s|
-  s.version = '0.0.0.3'
+  s.version = '0.0.0.4'
   s.authors = ['Abed A']
   s.files   = Dir['lib/**/*.rb']
   s.files.reject! { |fn| fn.include? 'example' }
