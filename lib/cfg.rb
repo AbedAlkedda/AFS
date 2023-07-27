@@ -8,7 +8,7 @@ class CFG
   attr_reader   :rnd_words
   attr_writer   :lang
 
-  def initialize(start_var, rules)
+  def initialize(alphabet, vars_set, start_var, rules)
     @start_var  = start_var
     @rules      = _rules rules
     @lang       = ->(w) { w.count('a') == w.count('b') } # Default reg a^nb^n
@@ -33,6 +33,18 @@ class CFG
 
   def dyck?(word)
     ->(w) { (w.count('a') - w.count('b')).zero? }.call word
+  end
+
+  def var_reachable?
+    ''
+  end
+
+  def var_productive?
+    ''
+  end
+
+  def var_reduced?
+    ''
   end
 
   # def epsilon_clear
