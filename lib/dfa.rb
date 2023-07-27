@@ -53,26 +53,29 @@ class DFA < Falafel
     (finals & states.keys).each_with_object({}) { |elt, memo| memo[elt] = states[elt] }
   end
 
-  def _r(finals, states, ri)
-    r = []
-    @states.each_with_index do |p, _|
-      @states.each_with_index do |q, _|
-        if finals.include?(p) == finals.include?(q)
-          @delta_star.each_key do |c|
-            ri_set = _ri_set states, c, p, q
-            r << (ri_set & ri).flatten if (ri_set & ri).any?
-          end
-        end
+  def _r(finals, states, steps)
+    r      = []
+    last_r = steps["R#{steps.size - 1}"]
+
+    last_r.each do |pair|
+      @delta_star.each_key do |c|
+        pair_frst = pair[0]
+        pair_lst  = pair[1]
+
+        ri_set = _ri_set states, c, states.key(pair_frst), states.key(pair_lst)
+
+        break unless last_r.include? ri_set
+
+        r << [pair_frst, pair_lst] unless r.include? [pair_frst, pair_lst]
       end
     end
-    r.uniq!
 
     r
   end
 
   def _steps_builder(finals, states, steps)
     0.upto(1_000) do |l|
-      r = _r finals, states, steps["R#{l}"]
+      r = _r finals, states, steps
       steps["R#{l + 1}"] = r
 
       return steps if steps["R#{l}"] == r
@@ -95,6 +98,6 @@ class DFA < Falafel
     lft = states[(_image [p], @delta_star[c])[0]]
     rgt = states[(_image [q], @delta_star[c])[0]]
 
-    [[lft, rgt]]
+    [lft, rgt]
   end
 end
