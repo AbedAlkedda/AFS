@@ -2,8 +2,20 @@
 
 # used to clear a CFG from the epsilon rules
 class EpsilonFree
+  def run(rules)
+    epsilon  = _epsilon rules
+    rules_ef = {}
 
-  def run
+    return if epsilon.empty?
+
+    epsilon.each do |e_class|
+      cleared_rules     = _cleared_rules rules[e_class]
+      epsilon_free_word = cleared_rules.join ''
+      grammer           = _grammer_epsilon_free epsilon_free_word, cleared_rules, e_class
+      rules_ef[e_class] = grammer
+    end
+
+    rules_ef
   end
 
   private
@@ -25,9 +37,9 @@ class EpsilonFree
     end
   end
 
-  def _epsilon
-    res = @rules.map do |var, rules|
-      next unless rules.include? []
+  def _epsilon(rules)
+    res = rules.map do |var, rule|
+      next unless rule.include? []
 
       var
     end
