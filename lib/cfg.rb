@@ -6,12 +6,10 @@
 class CFG
   attr_accessor :start_var, :rules
   attr_reader   :rnd_words
-  attr_writer   :lang
 
   def initialize(alphabet, vars_set, start_var, rules)
     @start_var  = start_var
     @rules      = _rules rules
-    @lang       = ->(w) { w.count('a') == w.count('b') } # Default reg a^nb^n
     @rnd_words  = []
     # @vars       = vars
     # @alphabet   = alphabet
@@ -23,16 +21,16 @@ class CFG
     # @cyk_matrix = [[]]
   end
 
-  def generate_word
-    word = _expand @start_var
+  def generate_words(lang, count)
+    @rnd_words = []
 
-    return unless @lang.call word
+    count.times do
+      word = _expand @start_var
 
-    @rnd_words << word unless @rnd_words.include? word
-  end
+      next unless lang&.call word
 
-  def dyck?(word)
-    ->(w) { (w.count('a') - w.count('b')).zero? }.call word
+      @rnd_words << word unless @rnd_words.include? word
+    end
   end
 
   def var_reachable?
@@ -107,6 +105,7 @@ class CFG
     return symbol if production.nil?
 
     rhs = production.sample # pick up a random element from array
+    # byebug
     rhs.map { |s| _expand(s) }.join
   end
 
