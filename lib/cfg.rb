@@ -5,13 +5,14 @@
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rnd_words
+  attr_reader   :rnd_words, :reachables
 
-  def initialize(alphabet, vars_set, start_var, rules)
+  def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
     @rules      = _rules rules
     @rnd_words  = []
-    # @vars       = vars
+    @reachables = []
+    @vars       = vars
     # @alphabet   = alphabet
     # @chomsky_nf = {}
     # @rules_ef   = {} # Rules Epsilon free
@@ -34,7 +35,10 @@ class CFG
   end
 
   def var_reachable?
-    ''
+    @rules[@start_var].each do |rule|
+      @vars.each { |var| @reachables << var if rule.include? var }
+    end
+    @reachables.uniq!
   end
 
   def var_productive?
