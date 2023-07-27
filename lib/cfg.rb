@@ -56,6 +56,12 @@ class CFG
     @rules_ef = EpsilonFree.new.run @rules
   end
 
+  def chaining_free
+    puts _chaining_relation.inspect
+    # build transivity relation from _chaining_relation as A
+    # remove _chaining_relation from rules
+    # add A to rules
+  end
   # def chomsky_run(rules)
   #   @res = {}
 
@@ -75,6 +81,25 @@ class CFG
   # end
 
   private
+
+  # chaining_free start
+  def _chaining_relation
+    rules = _rebuild_rules
+
+    rules & @vars.product(@vars)
+  end
+
+  def _rebuild_rules
+    result = []
+    @rules.each do |var, rule|
+      rule.map do |r|
+        result << [var, r.join]
+      end
+    end
+
+    result
+  end
+  # chaining_free end
 
   def _rules(rules)
     rules.each_value { |k| k.each_with_index { |item, index| k[index] = item[0].is_a?(String) ? item[0].split('') : item } }
