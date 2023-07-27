@@ -21,15 +21,15 @@ class CFG
     # @cyk_matrix = [[]]
   end
 
-  def generate_words(lang, count)
+  def generate_words(count)
     @rnd_words = []
 
-    count.times do
+    loop do
       word = _expand @start_var
 
-      next unless lang&.call word
-
       @rnd_words << word unless @rnd_words.include? word
+
+      break if @rnd_words.size == count
     end
   end
 
@@ -105,7 +105,7 @@ class CFG
     return symbol if production.nil?
 
     rhs = production.sample # pick up a random element from array
-    # byebug
+
     rhs.map { |s| _expand(s) }.join
   end
 
