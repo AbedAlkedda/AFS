@@ -63,7 +63,7 @@ class CFG
   def chaining_free
     c_free        = ChainingFree.new
     @rules_cf_res = c_free.run @rules, @vars
-    @rules_cf     = c_free.rebuild_rules
+    @rules_cf     = c_free.rebuild_rules @rules_cf_res
   end
 
   def chomksy_nf

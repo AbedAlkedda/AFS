@@ -9,7 +9,19 @@ class ChainingFree
 
     # build transivity relation from _chaining_relation(K) as A
     # remove _chaining_relation from rules
-    (_rebuild_rules - c_r) + c_r.map { |r| _transitivity_relation r }.reduce(:concat)
+    _rebuild_rules + c_r.map { |r| _transitivity_relation r }.reduce(:concat) - c_r
+  end
+
+  def rebuild_rules(current_rules)
+    res = {}
+
+    @vars.each { |v| res[v] = [] }
+
+    current_rules.each do |l, r|
+      res[l] << r.chars unless res[l].include? r.chars
+    end
+
+    res
   end
 
   private
