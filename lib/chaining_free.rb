@@ -33,21 +33,16 @@ class ChainingFree
 
   def _transitivity_relation(pair)
     transitive_relation = [pair]
-    loop do
-      new_pairs = []
 
-      _rebuild_rules.each do |a, b|
-        next unless pair[1] == a && !transitive_relation.include?([pair[0], b])
+    new_pairs = []
 
-        new_pairs << [pair[0], b]
-      end
+    _rebuild_rules.each do |a, b|
+      next unless pair[1] == a && !transitive_relation.include?([pair[0], b])
 
-      break if new_pairs.empty?
-
-      transitive_relation.concat(new_pairs)
+      new_pairs << [pair[0], b]
     end
 
-    transitive_relation
+    transitive_relation.concat new_pairs
   end
 
   def _new_pairs(rules)
