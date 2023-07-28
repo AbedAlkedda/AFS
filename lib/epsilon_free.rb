@@ -18,6 +18,22 @@ class EpsilonFree
     rules_ef
   end
 
+  def rebuild_rules(r, r_ef)
+    missing_vars = r.keys - r_ef.keys
+
+    res = {}
+    r_ef.each do |key, rules|
+      res[key] = []
+      rules.each do |rule|
+        res[key] << rule.chars
+      end
+    end
+
+    missing_vars.each { |v| res[v] = r[v] }
+
+    res
+  end
+
   private
 
   def _build_possibilities(s_rule)

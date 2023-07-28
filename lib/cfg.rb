@@ -8,7 +8,8 @@ require_relative 'chaining_free'
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rnd_words, :reachables, :rules_ef, :rules_cf
+  attr_reader   :rnd_words, :reachables, :rules_ef, :rules_cf,
+                :rules_ef_res
 
   def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
@@ -54,12 +55,23 @@ class CFG
   end
 
   def epsilon_free
-    @rules_ef = EpsilonFree.new.run @rules
+    e_free        = EpsilonFree.new
+    @rules_ef_res = e_free.run @rules
+    @rules_ef     = e_free.rebuild_rules @rules, @rules_ef_res
   end
 
   def chaining_free
     @rules_cf = ChainingFree.new.run @rules, @vars
+    # rebuild rules
   end
+
+  def chomksy_nf
+    # check if it the algo should be executed
+    # generate new vars 'a ∈ Σ und Regeln (va, a)'
+    # generate new rules for the alphabet '{a, b} => {(A, a), (B, b)}'
+    # generate new rules for the rules with the helping var
+  end
+
   # def chomsky_run(rules)
   #   @res = {}
 
