@@ -18,8 +18,8 @@ class EpsilonFree
     rules_ef
   end
 
-  def rebuild_rules(r, r_ef)
-    missing_vars = r.keys - r_ef.keys
+  def rebuild_rules(current_rules, r_ef)
+    missing_vars = current_rules.keys - r_ef.keys
 
     res = {}
     r_ef.each do |key, rules|
@@ -29,7 +29,7 @@ class EpsilonFree
       end
     end
 
-    missing_vars.each { |v| res[v] = r[v] }
+    missing_vars.each { |v| res[v] = current_rules[v] }
 
     res
   end
