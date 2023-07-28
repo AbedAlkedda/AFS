@@ -8,8 +8,8 @@ require_relative 'chaining_free'
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rnd_words, :reachables, :rules_ef, :rules_cf,
-                :rules_ef_res
+  attr_reader   :rules_ef, :rules_cf, :rnd_words, :reachables,
+                :rules_ef_res, :rules_cf_res
 
   def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
@@ -61,8 +61,9 @@ class CFG
   end
 
   def chaining_free
-    @rules_cf = ChainingFree.new.run @rules, @vars
-    # rebuild rules
+    c_free        = ChainingFree.new
+    @rules_cf_res = c_free.run @rules, @vars
+    @rules_cf     = c_free.rebuild_rules
   end
 
   def chomksy_nf
