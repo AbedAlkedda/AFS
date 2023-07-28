@@ -2,9 +2,13 @@
 
 require_relative 'rx'
 
-# Convert NFA to DFA
+# NFA to DFA
 # DFA to REG
 # Minimize DFA
+# Remove epsilons from CFG
+# Remove chaining from CFG
+# Find a chomksy normal form fro CFG
+# Apply CYK alogrithm on CFG and solve word problem
 class Falafel
   def self.new
     instance = allocate
