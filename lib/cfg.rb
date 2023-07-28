@@ -53,7 +53,7 @@ class CFG
     ''
   end
 
-  def epsilon_clear
+  def epsilon_free
     @rules_ef = EpsilonFree.new.run @rules
   end
 
