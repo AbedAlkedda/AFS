@@ -17,7 +17,6 @@ class CFG
     @rnd_words  = []
     @reachables = []
     @vars       = vars
-    @rules_ef   = {}
 
     # @alphabet   = alphabet
     # @chomsky_nf = {}
