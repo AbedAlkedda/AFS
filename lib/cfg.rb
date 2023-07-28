@@ -7,7 +7,7 @@ require_relative 'epsilon_free'
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rnd_words, :reachables, :rules_ef
+  attr_reader   :rnd_words, :reachables, :rules_ef, :rules_cf
 
   def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
@@ -57,10 +57,11 @@ class CFG
   end
 
   def chaining_free
-    puts _chaining_relation.inspect
-    # build transivity relation from _chaining_relation as A
+    c_r = _chaining_relation
+
+    # build transivity relation from _chaining_relation(K) as A
     # remove _chaining_relation from rules
-    # add A to rules
+    @rules_cf = (_rebuild_rules - c_r) + c_r.map { |r| _transitivity_relation r }.reduce(:concat)
   end
   # def chomsky_run(rules)
   #   @res = {}
@@ -98,6 +99,33 @@ class CFG
     end
 
     result
+  end
+
+  def _transitivity_relation(pair)
+    transitive_relation = [pair]
+    loop do
+      new_pairs = []
+
+      _rebuild_rules.each do |a, b|
+        next unless pair[1] == a && !transitive_relation.include?([pair[0], b])
+
+        new_pairs << [pair[0], b]
+      end
+
+      break if new_pairs.empty?
+
+      transitive_relation.concat(new_pairs)
+    end
+
+    transitive_relation
+  end
+
+  def _new_pairs(rules)
+    rules.each do |a, b|
+      next unless pair[1] == a && !transitive_relation.include?([pair[0], b])
+
+      new_pairs << [pair[0], b]
+    end
   end
   # chaining_free end
 
