@@ -17,9 +17,7 @@ class CFG
     @rnd_words  = []
     @reachables = []
     @vars       = vars
-
-    # @alphabet   = alphabet
-    # @chomsky_nf = {}
+    @alphabet   = alphabet
 
     # Cyk
     # @letter     = 'H'
@@ -66,19 +64,19 @@ class CFG
   end
 
   def chomksy_nf
-    # check if it the algo should be executed
     # generate new vars 'a ∈ Σ und Regeln (va, a)'
-    # generate new rules for the alphabet '{a, b} => {(A, a), (B, b)}'
-    # generate new rules for the rules with the helping var
+    new_rules = {}
+
+    # add cases like (A, a), (B, b)
+    _add_single_vars new_rules
+
+    # change rules like (X, aX) to (X, AX)
+    _handle_simple_rule new_rules
+
+    _handle_all_rule new_rules
+
+    puts new_rules.inspect
   end
-
-  # def chomsky_run(rules)
-  #   @res = {}
-
-  #   rules['S'].each { |r| @res[r] = _chomsky_as_nf r }
-
-  #   _build_chomsky_nf
-  # end
 
   # def cyk_run(word)
   #   @cyk_matrix = _cyk_fill_diagonal word
@@ -91,6 +89,66 @@ class CFG
   # end
 
   private
+
+  # chomksy_nf start
+  def _add_single_vars(new_rules)
+    @rules.values.reduce(:concat).each do |rule|
+      rule.select { |var| var == var.downcase }.each do |r|
+        new_rules[r] = r.upcase
+      end
+    end
+  end
+
+  def _handle_simple_rule(new_rules)
+    @rules.each do |var, rule|
+      new_rules[var] = []
+      rule.each do |r|
+        next if r.empty?
+
+        new_rules[var] << r.map(&:upcase)
+      end
+    end
+  end
+
+  def _handle_all_rule(new_rules)
+    holder = {}
+
+    new_rules.each do |var, rules|
+      next if _is_character? rules
+
+      rules.each do |rule|
+        rule.each_with_index do |head, index|
+          current_var = index.zero? ? var : _find_letter(index - 1)
+
+          if index + 2 == rule.size
+            holder[current_var] = ["#{head}#{rule[index + 1]}"]
+
+            break
+          end
+
+          if holder.key?(current_var)
+            holder[current_var] << ["#{head}#{_find_letter index}"]
+          else
+            holder[current_var] = ["#{head}#{_find_letter index}"]
+          end
+        end
+      end
+      new_rules.delete var
+    end
+    new_rules.merge! holder
+  end
+
+  def _find_letter(n)
+    result = 'H'
+    n.times { result = result.succ }
+
+    result
+  end
+
+  def _is_character?(value)
+    value.is_a?(String) && value.length == 1
+  end
+  # chomksy_nf end
 
   def _rules(rules)
     rules.each_value { |k| k.each_with_index { |item, index| k[index] = item[0].is_a?(String) ? item[0].split('') : item } }
