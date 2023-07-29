@@ -14,7 +14,7 @@ class CYK
 
   def _cyk_fill_diagonal
     wrd_lng = @word.length
-    table   = Array.new(wrd_lng) { Array.new(wrd_lng) { [] } }
+    table   = wrd_lng.times.map { wrd_lng.times.map { [] } }
 
     (0..wrd_lng - 1).each do |index|
       table[index][index] = @word[index].upcase
