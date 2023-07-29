@@ -14,7 +14,7 @@ RSpec.describe 'Calculator integration' do
     cfg.epsilon_free
     cfg.chomksy_nf cfg.rules_ef
     result = cfg.chomksy_nf cfg.rules_ef
-    res = { "A"=>"a", "B"=>"b", "S"=>["AH", "AJ", "AI", "AB"], "H"=>["SI"], "I"=>["BS", "BS"], "J"=>["SB"] }
+    res = { 'A' => 'a', 'B' => 'b', 'S' => %w[AH AJ AI AB], 'H' => ['SI'], 'I' => ['BS'], 'J' => ['SB'] }
 
     expect(result).to eq(res)
   end

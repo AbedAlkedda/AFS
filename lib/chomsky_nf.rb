@@ -80,11 +80,11 @@ class ChomskyNF
             nf_rest += rest
           end
 
-          holder[current_var] << nf_rest
+          holder[current_var] << nf_rest unless holder[current_var].include? nf_rest
 
           break
         else
-          holder[current_var] << nf_rest
+          holder[current_var] << nf_rest unless holder[current_var].include? nf_rest
         end
       end
     end
