@@ -111,31 +111,15 @@ class CFG
   end
 
   def _handle_all_rule(new_rules)
-    holder = {}
+    new_rules_buffer = {}
 
     new_rules.each do |var, rules|
       next if _is_character? rules
 
-      rules.each do |rule|
-        rule.each_with_index do |head, index|
-          current_var = index.zero? ? var : _find_letter(index - 1)
-
-          if index + 2 == rule.size
-            holder[current_var] = ["#{head}#{rule[index + 1]}"]
-
-            break
-          end
-
-          if holder.key?(current_var)
-            holder[current_var] << ["#{head}#{_find_letter index}"]
-          else
-            holder[current_var] = ["#{head}#{_find_letter index}"]
-          end
-        end
-      end
-      new_rules.delete var
+      new_rules_buffer = _new_rules_buffer rules, var
     end
-    new_rules.merge! holder
+
+    new_rules.merge! new_rules_buffer
   end
 
   def _find_letter(n)
@@ -148,6 +132,46 @@ class CFG
   def _is_character?(value)
     value.is_a?(String) && value.length == 1
   end
+
+  def _chomsky_nf_vars(index, var, rule)
+    rule_size   = rule.size
+    current_var = index.zero? ? var : _find_letter(index - 1)
+    letter      = _find_letter index
+    rest        = rule[(index + 1)..rule_size].join
+
+    [current_var, letter, rest]
+  end
+
+  def _add_var(holder, key, value)
+    if holder.key? key
+      holder[key] << [value]
+    else
+      holder[key] = [value]
+    end
+  end
+
+  def _new_rules_buffer(rules, var)
+    holder = {}
+
+    rules.each do |rule|
+      rule.each_with_index do |head, index|
+        current_var, letter, rest =  _chomsky_nf_vars index, var, rule
+
+        holder[rest] = letter unless holder.key? rest
+
+        if index + 2 == rule.size
+          _add_var holder, current_var, "#{head}#{rule[index + 1]}"
+
+          break
+        end
+
+        _add_var holder, current_var, "#{head}#{holder[rest]}"
+      end
+    end
+
+    holder
+  end
+
   # chomksy_nf end
 
   def _rules(rules)
