@@ -90,36 +90,4 @@ class CFG
 
     rhs.map { |s| _expand(s) }.join
   end
-
-  # def _cyk
-  #   @cyk_matrix.size.times do |limiter|
-  #     (0...@cyk_matrix.length - limiter).each do |i|
-  #       j = i + limiter
-
-  #       next if i == j
-
-  #       p_, q_ = _cyk_p_q i, j
-
-  #       rule = "#{p_}#{q_}"
-
-  #       @cyk_matrix[i][j] = _cyk_new_matrix_val rule
-  #     end
-  #   end
-  # end
-
-  # def _cyk_p_q(i, j)
-  #   h_   = j - 1
-  #   h_  -= 1 until @chomsky_nf['hlp_hash'].values.include? @cyk_matrix[i][h_]
-  #   p_   = @cyk_matrix[i][h_]
-  #   q_   = @cyk_matrix[h_ + 1][j]
-
-  #   [p_, q_]
-  # end
-
-  # def _cyk_new_matrix_val(rule)
-  #   val = @chomsky_nf['rules'].select { |hash| hash.value?(rule) }&.first&.key(rule)
-  #   val ||= '∅ '
-
-  #   val
-  # end
 end
