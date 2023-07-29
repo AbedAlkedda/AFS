@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
+require_relative 'cyk'
+require_relative 'chomsky_nf'
 require_relative 'epsilon_free'
 require_relative 'chaining_free'
-require_relative 'chomsky_nf'
-require_relative 'cyk'
 
 # Samll CFG impletation
 # Generate words and check if words are the @lang
@@ -20,9 +20,6 @@ class CFG
     @reachables = []
     @vars       = vars
     @alphabet   = alphabet
-
-    # Cyk
-    # @cyk_matrix = [[]]
   end
 
   def generate_words(count)
