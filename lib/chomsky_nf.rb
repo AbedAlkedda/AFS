@@ -13,7 +13,7 @@ class ChomskyNF
     # change rules like (X, aX) to (X, AX)
     _handle_simple_rule new_rules
 
-    @chomksy_nf_rules = _handle_all_rule new_rules
+    _handle_all_rule new_rules
   end
 
   private

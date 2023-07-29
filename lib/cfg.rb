@@ -63,10 +63,10 @@ class CFG
     @rules_cf     = c_free.rebuild_rules @rules_cf_res
   end
 
-  def chomksy_nf
+  def chomksy_nf(custom_rule)
     chomksy = ChomskyNF.new
 
-    @chomksy_nf_rules = chomksy.run @rules_ef, @alphabet
+    @chomksy_nf_rules = chomksy.run custom_rule || @rules, @alphabet
   end
 
   # def cyk_run(word)
