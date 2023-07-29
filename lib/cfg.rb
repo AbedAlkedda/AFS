@@ -69,15 +69,11 @@ class CFG
     @chomksy_nf_rules = chomksy.run custom_rule || @rules, @alphabet
   end
 
-  # def cyk_run(word)
-  #   @cyk_matrix = _cyk_fill_diagonal word
+  def cyk_run(word)
+    matrix = _cyk_fill_diagonal word
 
-  #   _cyk
-  # end
-
-  # def print_cyk_matrix
-  #   puts @cyk_matrix.map(&:inspect)
-  # end
+    puts matrix.map(&:inspect)
+  end
 
   private
 
@@ -95,15 +91,17 @@ class CFG
     rhs.map { |s| _expand(s) }.join
   end
 
-  # def _cyk_fill_diagonal(word)
-  #   wrd_lng = word.length
-  #   table = Array.new(wrd_lng) { Array.new(wrd_lng) { [] } }
-  #   (0..wrd_lng - 1).each do |index|
-  #     table[index][index] = word[index].upcase
-  #   end
+  # cyk_run start
+  def _cyk_fill_diagonal(word)
+    wrd_lng = word.length
+    table = Array.new(wrd_lng) { Array.new(wrd_lng) { [] } }
+    (0..wrd_lng - 1).each do |index|
+      table[index][index] = word[index].upcase
+    end
 
-  #   table
-  # end
+    table
+  end
+  # cyk_run end
 
   # def _cyk
   #   @cyk_matrix.size.times do |limiter|
