@@ -3,6 +3,7 @@
 require_relative 'epsilon_free'
 require_relative 'chaining_free'
 require_relative 'chomsky_nf'
+require_relative 'cyk'
 
 # Samll CFG impletation
 # Generate words and check if words are the @lang
@@ -70,7 +71,9 @@ class CFG
   end
 
   def cyk_run(word)
-    matrix = _cyk_fill_diagonal word
+    cyk = CYK.new word
+
+    matrix = cyk.run
 
     puts matrix.map(&:inspect)
   end
@@ -90,18 +93,6 @@ class CFG
 
     rhs.map { |s| _expand(s) }.join
   end
-
-  # cyk_run start
-  def _cyk_fill_diagonal(word)
-    wrd_lng = word.length
-    table = Array.new(wrd_lng) { Array.new(wrd_lng) { [] } }
-    (0..wrd_lng - 1).each do |index|
-      table[index][index] = word[index].upcase
-    end
-
-    table
-  end
-  # cyk_run end
 
   # def _cyk
   #   @cyk_matrix.size.times do |limiter|
