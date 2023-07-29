@@ -9,7 +9,7 @@ require_relative 'chaining_free'
 class CFG
   attr_accessor :start_var, :rules
   attr_reader   :rules_ef, :rules_cf, :rnd_words, :reachables,
-                :rules_ef_res, :rules_cf_res
+                :rules_ef_res, :rules_cf_res, :chomksy_nf_rules
 
   def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
@@ -20,7 +20,6 @@ class CFG
     @alphabet   = alphabet
 
     # Cyk
-    # @letter     = 'H'
     # @cyk_matrix = [[]]
   end
 
@@ -66,6 +65,7 @@ class CFG
   def chomksy_nf
     # generate new vars 'a ∈ Σ und Regeln (va, a)'
     new_rules = {}
+    @rules    = @rules_ef || @rules_cf
 
     # add cases like (A, a), (B, b)
     _add_single_vars new_rules
@@ -73,9 +73,7 @@ class CFG
     # change rules like (X, aX) to (X, AX)
     _handle_simple_rule new_rules
 
-    _handle_all_rule new_rules
-
-    puts new_rules.inspect
+    @chomksy_nf_rules = _handle_all_rule new_rules
   end
 
   # def cyk_run(word)
@@ -94,7 +92,7 @@ class CFG
   def _add_single_vars(new_rules)
     @rules.values.reduce(:concat).each do |rule|
       rule.select { |var| var == var.downcase }.each do |r|
-        new_rules[r] = r.upcase
+        new_rules[r.upcase] = r
       end
     end
   end
@@ -122,24 +120,87 @@ class CFG
     new_rules.merge! new_rules_buffer
   end
 
+  def _is_character?(value)
+    value.is_a?(String) && value.length == 1
+  end
+
+  def _new_rules_buffer(rules, var)
+    helper_vars = _helper_vars rules
+    helper_vars.merge! @alphabet.each_with_object({}) { |ele, meme| meme[ele.capitalize] = ele.capitalize }
+
+    _new_rules rules, var, helper_vars
+  end
+
+  def _new_rules(rules, var, helper_vars)
+    holder = {}
+
+    rules.each do |rule|
+      rest = ''
+      rule.each_with_index do |head, index|
+        current_var = index.zero? ? var : rest
+
+        holder[current_var] ||= []
+
+        rest = _chomsky_nf_vars index, rule, helper_vars
+
+        nf_rest = "#{head}#{rest}"
+
+        if index + 2 == rule.size
+          if rest.nil?
+            rest     = rule.last
+            nf_rest += rest
+          end
+
+          holder[current_var] << nf_rest
+
+          break
+        else
+          holder[current_var] << nf_rest
+        end
+      end
+    end
+
+    holder
+  end
+
+  def _chomsky_nf_vars(index, rule, helper_vars)
+    rule_size = rule.size
+    rest      = rule[(index + 1)..rule_size].join
+
+    helper_vars.key(rest)
+  end
+
+  def _helper_vars(rules)
+    helper_vars = {}
+
+    rules.each do |rule|
+      rule.each_with_index do |_, index|
+        letter, rest = _chomsky_nf_helper_vars index, rule, helper_vars.keys
+
+        break if index + 2 == rule.size
+
+        next if helper_vars.values.include? rest
+
+        helper_vars[letter] = rest unless helper_vars.key?(letter) && rest.size > 1
+      end
+    end
+
+    helper_vars
+  end
+
+  def _chomsky_nf_helper_vars(index, rule, helper_vars)
+    rule_size   = rule.size
+    letter      = helper_vars.empty? ? _find_letter(index) : helper_vars.sort!.last.succ
+    rest        = rule[(index + 1)..rule_size].join
+
+    [letter, rest]
+  end
+
   def _find_letter(n)
     result = 'H'
     n.times { result = result.succ }
 
     result
-  end
-
-  def _is_character?(value)
-    value.is_a?(String) && value.length == 1
-  end
-
-  def _chomsky_nf_vars(index, var, rule)
-    rule_size   = rule.size
-    current_var = index.zero? ? var : _find_letter(index - 1)
-    letter      = _find_letter index
-    rest        = rule[(index + 1)..rule_size].join
-
-    [current_var, letter, rest]
   end
 
   def _add_var(holder, key, value)
@@ -148,28 +209,6 @@ class CFG
     else
       holder[key] = [value]
     end
-  end
-
-  def _new_rules_buffer(rules, var)
-    holder = {}
-
-    rules.each do |rule|
-      rule.each_with_index do |head, index|
-        current_var, letter, rest =  _chomsky_nf_vars index, var, rule
-
-        holder[rest] = letter unless holder.key? rest
-
-        if index + 2 == rule.size
-          _add_var holder, current_var, "#{head}#{rule[index + 1]}"
-
-          break
-        end
-
-        _add_var holder, current_var, "#{head}#{holder[rest]}"
-      end
-    end
-
-    holder
   end
 
   # chomksy_nf end
@@ -187,103 +226,6 @@ class CFG
 
     rhs.map { |s| _expand(s) }.join
   end
-
-  # def _chomsky_as_nf(rule)
-  #   return {} if rule.size <= 2
-
-  #   rules_new = _build_chomsky rule
-  #   _check_loop rules_new
-
-  #   rules_new
-  # end
-
-  # def _chomsky_rgt(rule_up, index, h_num)
-  #   rgt     = "#{rule_up[index]}#{@letter}"
-  #   rgt     = "#{rule_up[index]}#{rule_up[index + 1]}" if h_num == rule_up.size
-  #   @letter = @letter.succ
-
-  #   rgt
-  # end
-
-  # def _build_chomsky(rule)
-  #   rule_up, index, rules_new = _chomsky_nf_vars rule
-  #   lft ||= 'S'
-
-  #   2.upto(rule_up.size) do |h_num|
-  #     rgt = _chomsky_rgt rule_up, index, h_num
-  #     rules_new << { lft.to_s => rgt }
-  #     lft    = (@letter.ord - 1).chr
-  #     index += 1
-  #   end
-
-  #   rules_new
-  # end
-
-  # def _build_chomsky_nf
-  #   # build Chomsky-Nf mit Nachnutzen von Hilfsvariablen
-  #   @chomsky_nf['alphabet']  = @alphabet
-  #   @chomsky_nf['hlp_vars']  = _build_chomsky_nf_hlp_vars
-  #   @chomsky_nf['start_var'] = 'S'
-  #   @chomsky_nf['rules']     = _build_chomsky_nf_rules
-  #   @chomsky_nf['hlp_hash']  = _build_chomsky_nf_hlp_hash
-  # end
-
-  # def _build_chomsky_nf_hlp_vars
-  #   hlp_vars = %w[A B]
-  #   hlp_vars << @res.values.flatten.reject(&:empty?).map(&:keys).flatten.uniq
-
-  #   hlp_vars.flatten
-  # end
-
-  # def _build_chomsky_nf_rules
-  #   res = @res.values.flatten.reject(&:empty?)
-  #   res << { 'A' => 'a' }
-  #   res << { 'B' => 'b' }
-  #   start_var = @res.keys.select { |x| x.size <= 2 }.select { |x| x == @alphabet.join('') }
-
-  #   unless start_var.empty?
-  #     start_var = start_var[0].upcase
-  #     res << { 'S' => start_var }
-  #   end
-
-  #   res
-  # end
-
-  # def _build_chomsky_nf_hlp_hash
-  #   res = {}
-  #   i = 0
-  #   @chomsky_nf['hlp_vars'].each do |h|
-  #     next if h == 'S'
-
-  #     res[i] = h
-  #     i += 1
-  #   end
-
-  #   res
-  # end
-
-  # def _check_loop(rules_new)
-  #   @res.each do |_, solutions|
-  #     solutions.each do |solution|
-  #       solution.each do |sol_key, sol_val|
-  #         rules_new.each_with_index do |rule, index|
-  #           rule.each do |rul_key, rul_val|
-  #             rule.delete(rul_key) if rul_val == sol_val
-  #             rules_new[index - 1].values[0][1] = sol_key if rul_val == sol_val
-  #           end
-  #         end
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def _chomsky_nf_vars(r)
-  #   rule_up   = r.is_a?(Array) ? r : r.upcase
-  #   index     = 0
-  #   rules_new = []
-
-  #   [rule_up, index, rules_new]
-  # end
 
   # def _cyk_fill_diagonal(word)
   #   wrd_lng = word.length
