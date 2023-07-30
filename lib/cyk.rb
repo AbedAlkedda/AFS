@@ -10,7 +10,7 @@ class CYK
 
   def run
     _cyk_fill_diagonal
-    _cyk
+    _cyk_fill_matrix
 
     @matrix
   end
@@ -26,7 +26,7 @@ class CYK
     end
   end
 
-  def _cyk
+  def _cyk_fill_matrix
     @matrix.size.times do |limiter|
       (0...@matrix.length - limiter).each do |i|
         j = i + limiter
