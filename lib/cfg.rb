@@ -68,7 +68,7 @@ class CFG
   end
 
   def cyk_run(word)
-    cyk = CYK.new word
+    cyk = CYK.new word, chomksy_nf_rules
 
     matrix = cyk.run
 
