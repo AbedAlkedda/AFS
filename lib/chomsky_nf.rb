@@ -15,7 +15,7 @@ class ChomskyNF
 
     _handle_all_rule new_rules
 
-    _check_hidden_rules new_rules
+    _simplify new_rules
   end
 
   private
@@ -145,9 +145,24 @@ class ChomskyNF
     result
   end
 
-  def _check_hidden_rules(new_rules)
-    res = {}
+  def _simplify(new_rules)
+    hidden_rules_vars = _hidden_rules_vars new_rules
+  end
 
-    new_rules
+  def _hidden_rules_vars(new_rules)
+    vars = {}
+
+    new_rules.each do |key, values|
+      next if values.size == 1
+
+      values.each do |val|
+        next unless val.size == 1 && @alphabet.include?(val.downcase)
+
+        vars[key] ||= []
+        vars[key] << val
+      end
+    end
+
+    vars
   end
 end
