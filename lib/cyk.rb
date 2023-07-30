@@ -2,8 +2,10 @@
 
 # Implemention of cyk algo.
 class CYK
-  def initialize(word)
-    @word = word
+  def initialize(word, custom_rule)
+    @word        = word
+    @rules       = custom_rule.select { |_, val| val.is_a?(Array) }
+    @helper_vars = @rules.values.flatten
   end
 
   def run
@@ -28,31 +30,40 @@ class CYK
     @matrix.size.times do |limiter|
       (0...@matrix.length - limiter).each do |i|
         j = i + limiter
+
         next if i == j
 
-        # puts "j:#{j}, i:#{i}, limiter: #{limiter}"
-        # p_, q_ = _cyk_p_q i, j
+        helper_var = _helper_var i, j
 
-        # rule = "#{p_}#{q_}"
-
-        # @matrix[i][j] = _cyk_new_matrix_val rule
+        @matrix[i][j] = _add_to_matrix helper_var
       end
     end
   end
 
-  # def _cyk_p_q(i, j)
-  #   h_   = j - 1
-  #   h_  -= 1 until @chomsky_nf['hlp_hash'].values.include? @cyk_matrix[i][h_]
-  #   p_   = @cyk_matrix[i][h_]
-  #   q_   = @cyk_matrix[h_ + 1][j]
+  def _helper_var(row, col)
+    res = '0'
 
-  #   [p_, q_]
-  # end
+    (row..col - 1).step(1) do |h|
+      p_  = @matrix[row][h]
+      q_  = @matrix[h + 1][col]
+      res = "#{p_}#{q_}"
 
-  # def _cyk_new_matrix_val(rule)
-  #   val = @chomsky_nf['rules'].select { |hash| hash.value?(rule) }&.first&.key(rule)
-  #   val ||= '∅ '
+      break if @helper_vars.include? res
+    end
 
-  #   val
-  # end
+    res
+  end
+
+  def _add_to_matrix(rule)
+    res = '0'
+    return if rule == res
+
+    @rules.each do |key, vals|
+      vals.each do |val|
+        res = key if val == rule
+      end
+    end
+
+    res
+  end
 end
