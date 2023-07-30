@@ -10,8 +10,9 @@ require_relative 'chaining_free'
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rules_ef, :rules_cf, :rnd_words, :reachables,
-                :rules_ef_res, :rules_cf_res, :chomksy_nf_rules
+  attr_reader   :rules_ef,     :rules_cf,     :rnd_words, :reachables,
+                :rules_ef_res, :rules_cf_res, :chomksy_nf_rules,
+                :cyk_matrix,   :is_in_l
 
   def initialize(alphabet, vars, start_var, rules)
     @start_var  = start_var
@@ -70,9 +71,10 @@ class CFG
   def cyk_run(word)
     cyk = CYK.new word, chomksy_nf_rules
 
-    matrix = cyk.run
+    cyk.run
 
-    puts matrix.map(&:inspect)
+    @cyk_matrix = cyk.matrix
+    @is_in_l    = cyk.is_in_l
   end
 
   private

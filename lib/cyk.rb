@@ -2,6 +2,8 @@
 
 # Implemention of cyk algo.
 class CYK
+  attr_reader :matrix, :is_in_l
+
   def initialize(word, custom_rule)
     @word        = word
     @rules       = custom_rule.select { |_, val| val.is_a?(Array) }
@@ -11,8 +13,7 @@ class CYK
   def run
     _cyk_fill_diagonal
     _cyk_fill_matrix
-
-    @matrix
+    _is_in_l?
   end
 
   private
@@ -65,5 +66,9 @@ class CYK
     end
 
     res
+  end
+
+  def _is_in_l?
+    @is_in_l = @matrix.first.last == 'S'
   end
 end
