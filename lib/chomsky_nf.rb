@@ -14,6 +14,8 @@ class ChomskyNF
     _handle_simple_rule new_rules
 
     _handle_all_rule new_rules
+
+    _check_hidden_rules new_rules
   end
 
   private
@@ -60,6 +62,14 @@ class ChomskyNF
     _new_rules rules, var, helper_vars
   end
 
+  def _check_simplify(rule, holder, current_var)
+    return false unless rule.size == 1
+
+    holder[current_var] << rule.last unless holder[current_var].include? rule
+
+    true
+  end
+
   def _new_rules(rules, var, helper_vars)
     holder = {}
 
@@ -67,8 +77,11 @@ class ChomskyNF
       rest = ''
       rule.each_with_index do |head, index|
         current_var = index.zero? ? var : rest
-
         holder[current_var] ||= []
+
+        is_simple = _check_simplify rule, holder, current_var
+
+        break if is_simple
 
         rest = _chomsky_nf_vars index, rule, helper_vars
 
@@ -130,5 +143,11 @@ class ChomskyNF
     n.times { result = result.succ }
 
     result
+  end
+
+  def _check_hidden_rules(new_rules)
+    res = {}
+
+    new_rules
   end
 end

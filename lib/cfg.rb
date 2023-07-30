@@ -69,7 +69,7 @@ class CFG
   end
 
   def cyk_run(word)
-    cyk = CYK.new word, chomksy_nf_rules
+    cyk = CYK.new word, @chomksy_nf_rules
 
     cyk.run
 
