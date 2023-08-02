@@ -146,10 +146,36 @@ class ChomskyNF
   end
 
   def _simplify(new_rules)
-    hidden_rules_vars = _hidden_rules_vars new_rules
+    var_has_letter = _var_has_letter new_rules
+
+    return new_rules if var_has_letter.empty?
+
+    modify = _modify_rules new_rules
+
+    byebug
+    new_rules
   end
 
-  def _hidden_rules_vars(new_rules)
+  def _modify_rules(rules)
+    res = {}
+
+    rules.each_key do |main_key|
+      rules.each do |key, values|
+        next if values.is_a?(String)
+
+        values.each do |v|
+          next unless v.include?(main_key) && v.size == 1
+
+          res[key] ||= []
+          res[key] << v
+        end
+      end
+    end
+
+    res
+  end
+
+  def _var_has_letter(new_rules)
     vars = {}
 
     new_rules.each do |key, values|
