@@ -11,7 +11,7 @@ require_relative 'chaining_free'
 class CFG
   attr_accessor :start_var, :rules
   attr_reader   :rules_ef,     :rules_cf,     :rnd_words, :reachables,
-                :rules_ef_res, :rules_cf_res, :chomksy_nf_rules,
+                :rules_ef_res, :rules_cf_res, :chomsky_nf_rules,
                 :cyk_matrix,   :is_in_l
 
   def initialize(alphabet, vars, start_var, rules)
@@ -62,15 +62,15 @@ class CFG
     @rules_cf     = c_free.rebuild_rules @rules_cf_res
   end
 
-  def chomksy_nf(custom_rule)
-    chomksy = ChomskyNF.new
-    rules   = chomksy.run custom_rule || @rules, @alphabet
+  def chomsky_nf(custom_rule)
+    chomsky = ChomskyNF.new
+    rules   = chomsky.run custom_rule || @rules, @alphabet
 
-    @chomksy_nf_rules = chomksy.simplify rules
+    @chomsky_nf_rules = chomsky.simplify rules
   end
 
   def cyk_run(word)
-    cyk = CYK.new word, @chomksy_nf_rules
+    cyk = CYK.new word, @chomsky_nf_rules
 
     cyk.run
 

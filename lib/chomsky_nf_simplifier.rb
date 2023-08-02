@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# simplify chomksy normal form
+# simplify chomsky normal form
 class ChomskyNFSimplifier
   def run(new_rules, alphabet)
     var_has_one_letter = _var_has_one_letter new_rules, alphabet

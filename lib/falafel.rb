@@ -7,7 +7,7 @@ require_relative 'rx'
 # Minimize DFA
 # Remove epsilons from CFG
 # Remove chaining from CFG
-# Find a chomksy normal form fro CFG
+# Find a chomsky normal form fro CFG
 # Apply CYK alogrithm on CFG and solve word problem
 class Falafel
   def self.new
