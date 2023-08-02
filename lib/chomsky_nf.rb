@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'chomsky_nf_simplifier'
+
 # convert to Chomsky Normal Form
 class ChomskyNF
   def run(rules, alphabet)
@@ -14,7 +16,8 @@ class ChomskyNF
     _handle_simple_rule new_rules
 
     _handle_all_rule new_rules
-
+    simplifier = ChomskyNFSimplifier.new
+    puts simplifier.run
     _simplify new_rules
   end
 
