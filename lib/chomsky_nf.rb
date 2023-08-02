@@ -146,36 +146,37 @@ class ChomskyNF
   end
 
   def _simplify(new_rules)
-    var_has_letter = _var_has_letter new_rules
+    var_has_one_letter = _var_has_one_letter new_rules
 
-    return new_rules if var_has_letter.empty?
+    return if var_has_one_letter.empty?
 
-    modify = _modify_rules new_rules
+    modify = _modify_rules new_rules, var_has_one_letter
 
-    byebug
     new_rules
   end
 
-  def _modify_rules(rules)
-    res = {}
+  def _modify_rules(rules, vars)
+    modify = {}
 
-    rules.each_key do |main_key|
-      rules.each do |key, values|
-        next if values.is_a?(String)
+    rules.each do |key, val|
+      next if val.is_a?(String)
 
-        values.each do |v|
-          next unless v.include?(main_key) && v.size == 1
+      val.each do |v|
+        vars.each_key do |k|
+          next unless v.include?(k)
 
-          res[key] ||= []
-          res[key] << v
+          res = val.select { |x| x.include? k }
+
+          modify[key] ||= []
+          modify[key] << res
         end
       end
     end
 
-    res
+    modify
   end
 
-  def _var_has_letter(new_rules)
+  def _var_has_one_letter(new_rules)
     vars = {}
 
     new_rules.each do |key, values|
