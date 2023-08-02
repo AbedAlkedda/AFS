@@ -64,8 +64,9 @@ class CFG
 
   def chomksy_nf(custom_rule)
     chomksy = ChomskyNF.new
+    rules   = chomksy.run custom_rule || @rules, @alphabet
 
-    @chomksy_nf_rules = chomksy.run custom_rule || @rules, @alphabet
+    @chomksy_nf_rules = chomksy.simplify rules
   end
 
   def cyk_run(word)
