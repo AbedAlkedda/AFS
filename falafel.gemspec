@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.version = '0.0.1.0'
-  s.authors = ['Abed A']
+  s.authors = ['Abed Alkedda']
   s.files   = Dir['lib/**/*.rb']
   s.files.reject! { |fn| fn.include? 'example' }
   s.name     = 'falafel'
