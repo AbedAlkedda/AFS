@@ -64,3 +64,28 @@ RSpec.describe 'CYK implementing 2' do
     end
   end
 end
+
+RSpec.describe 'CYK implementing 3' do
+  it 'CYK word problem 3' do
+    alphabet  = %w[a b c]
+    vars_set  = ['S']
+    start_var = 'S'
+
+    rules = { 'S' => [[]] }
+    rules['S'] << ['aSc']
+    rules['S'] << ['bSc']
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.epsilon_free
+    cfg.chomsky_nf cfg.rules_ef
+
+    check_results = { 'ac' => true, 'abcc' => true }
+    check_results.each do |word, res|
+      cfg.cyk_run word
+      result = cfg.is_in_l
+      expect(result).to eq(res)
+    end
+  end
+end
