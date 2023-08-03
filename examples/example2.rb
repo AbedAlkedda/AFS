@@ -15,9 +15,7 @@ cfg.epsilon_free
 
 cfg.chomsky_nf cfg.rules_ef
 
-puts cfg.chomsky_nf_rules
-
-word = 'ac'
+word = 'aaaabbbbcccccccc'
 cfg.cyk_run word
 puts cfg.cyk_matrix.map(&:inspect)
 puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
