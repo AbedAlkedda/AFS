@@ -13,7 +13,7 @@ class CYK
   def run
     _cyk_fill_diagonal
     _cyk_fill_matrix
-    _is_in_l?
+    @is_in_l = _is_in_l?
   end
 
   private
@@ -69,6 +69,6 @@ class CYK
   end
 
   def _is_in_l?
-    @is_in_l = @matrix.first.last == 'S'
+    @matrix.first.last == 'S'
   end
 end
