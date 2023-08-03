@@ -70,6 +70,7 @@ class ChomskyNFSimplifier
             res[var_rule] << new_rules
           end
         end
+        _check_special_case nf, res, var_rule, vars
       end
     end
 
@@ -81,10 +82,10 @@ class ChomskyNFSimplifier
 
     0.upto(1) do |i|
       0.upto(1) do |j|
-        new_string = original_string.dup
-        new_string[0] = replacement_char if i == 1 && original_string[0] == match_char
-        new_string[1] = replacement_char if j == 1 && original_string[1] == match_char
-        combinations << new_string
+        new_rule = original_string.dup
+        new_rule[0] = replacement_char if i == 1 && original_string[0] == match_char
+        new_rule[1] = replacement_char if j == 1 && original_string[1] == match_char
+        combinations << new_rule
       end
     end
 
@@ -93,5 +94,17 @@ class ChomskyNFSimplifier
 
   def _add_missing_rules(missing_rules, new_rules)
     missing_rules.each { |key, val| new_rules[key] = val.flatten.uniq! }
+  end
+
+  def _check_special_case(nf, res, var_rule, vars)
+    vars.each do |match_char, combi|
+      next unless nf == match_char * 2
+
+      missing_rules = combi.map { |lft| combi.map { |rgt| "#{lft}#{rgt}" } }.flatten
+
+      res[var_rule] << missing_rules
+    end
+
+    res
   end
 end
