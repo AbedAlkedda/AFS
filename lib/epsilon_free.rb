@@ -10,7 +10,7 @@ class EpsilonFree
 
     epsilon.each do |e_class|
       cleared_rules     = _cleared_rules rules[e_class]
-      epsilon_free_word = cleared_rules.join ''
+      epsilon_free_word = cleared_rules.map(&:join)
       grammer           = _grammer_epsilon_free epsilon_free_word, cleared_rules, e_class
       rules_ef[e_class] = grammer
     end
@@ -36,6 +36,31 @@ class EpsilonFree
 
   private
 
+  def _epsilon(rules)
+    res = rules.map do |var, rule|
+      next unless rule.include? []
+
+      var
+    end
+    res.reject(&:nil?)
+  end
+
+  def _cleared_rules(rules)
+    rules.reject(&:empty?)
+  end
+
+  def _grammer_epsilon_free(epsilon_free_word, cleared_rules, e_class)
+    possibilities = _build_possibilities epsilon_free_word
+
+    res = possibilities.map do |possibility|
+      _remove_e_class possibility, cleared_rules
+    end
+
+    res << epsilon_free_word.delete(e_class) if possibilities.size == 1
+
+    res
+  end
+
   def _build_possibilities(s_rule)
     s_index = []
     s_rule.each_char.with_index { |char, index| s_index << index if char == 'S' }
@@ -53,19 +78,6 @@ class EpsilonFree
     end
   end
 
-  def _epsilon(rules)
-    res = rules.map do |var, rule|
-      next unless rule.include? []
-
-      var
-    end
-    res.reject(&:nil?)
-  end
-
-  def _cleared_rules(rules)
-    rules.reject(&:empty?)
-  end
-
   def _remove_e_class(possibility, cleared_rules)
     return cleared_rules.join '' if possibility.empty?
 
@@ -73,17 +85,5 @@ class EpsilonFree
     possibility.reverse.each { |index| new_rule.slice! index }
 
     new_rule
-  end
-
-  def _grammer_epsilon_free(epsilon_free_word, cleared_rules, e_class)
-    possibilities = _build_possibilities epsilon_free_word
-
-    res = possibilities.map do |possibility|
-      _remove_e_class possibility, cleared_rules
-    end
-
-    res << epsilon_free_word.delete(e_class) if possibilities.size == 1
-
-    res
   end
 end
