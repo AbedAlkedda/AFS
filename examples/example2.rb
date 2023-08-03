@@ -11,19 +11,13 @@ rules['S'] << ['bSc']
 falafel = Falafel.new {}
 cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-# {a^x b^y c^x+y | x, y ∈ N}
-reg2 = ->(w) { (w.count('a') + w.count('b') == w.count('c')) && w.match(/\A(a*b*c*)\z/) }
+cfg.epsilon_free
 
-cfg.lang = reg2
+cfg.chomsky_nf cfg.rules_ef
 
-# generate words
-100.times { cfg.generate_word }
+puts cfg.chomsky_nf_rules
 
-cfg.rnd_words.sort!.each { |wrd| p wrd }
-
-# check if language is dyck
-puts cfg.dyck? ''
-puts cfg.dyck? 'a'
-puts cfg.dyck? 'b'
-puts cfg.dyck? 'ab'
-puts cfg.dyck? 'ba'
+word = 'ac'
+cfg.cyk_run word
+puts cfg.cyk_matrix.map(&:inspect)
+puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
