@@ -11,18 +11,18 @@ class EpsilonFree
     epsilon.each do |e_class|
       cleared_rules     = _cleared_rules rules[e_class]
       epsilon_free_word = cleared_rules.map(&:join)
-      grammer           = _grammer_epsilon_free epsilon_free_word, cleared_rules, e_class
+      grammer           = _grammer_epsilon_free epsilon_free_word, e_class
       rules_ef[e_class] = grammer
     end
 
     rules_ef
   end
 
-  def rebuild_rules(current_rules, r_ef)
-    missing_vars = current_rules.keys - r_ef.keys
+  def rebuild_rules(current_rules, rules_epsilon_free)
+    missing_vars = current_rules.keys - rules_epsilon_free.keys
 
     res = {}
-    r_ef.each do |key, rules|
+    rules_epsilon_free.each do |key, rules|
       res[key] = []
       rules.each do |rule|
         res[key] << rule.chars
@@ -49,23 +49,30 @@ class EpsilonFree
     rules.reject(&:empty?)
   end
 
-  def _grammer_epsilon_free(epsilon_free_word, cleared_rules, e_class)
-    possibilities = _build_possibilities epsilon_free_word
+  def _grammer_epsilon_free(epsilon_free_word, e_class)
+    rules_epsilon_location = _new_rules_epsilon_location epsilon_free_word, e_class
 
-    res = possibilities.map do |possibility|
-      _remove_e_class possibility, cleared_rules
+    res = []
+    rules_epsilon_location.map do |rule, possibilities|
+      possibilities.each do |possibility|
+        res << _remove_e_class(possibility, rule.split(''))
+      end
+
+      res << epsilon_free_word.delete(e_class) if possibilities.size == 1
     end
-
-    res << epsilon_free_word.delete(e_class) if possibilities.size == 1
 
     res
   end
 
-  def _build_possibilities(s_rule)
-    s_index = []
-    s_rule.each_char.with_index { |char, index| s_index << index if char == 'S' }
+  def _new_rules_epsilon_location(s_rule, e_class)
+    res = {}
+    s_rule.each do |rule|
+      s_index = []
+      rule.each_char.with_index { |char, index| s_index << index if char == e_class }
+      res[rule] = _power_set(s_index)
+    end
 
-    _power_set s_index
+    res
   end
 
   def _power_set(set)
