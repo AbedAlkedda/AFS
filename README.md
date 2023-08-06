@@ -1,10 +1,21 @@
-# Build and install your gem:
+# Automata Problem Solver
 
-Run gem build gem_name.gemspec in your terminal. This will generate a .gem file.
+It solves some of the automata and formal languages problems:
 
-Install your gem locally by running gem install ./gem_name-x.x.x.gem (replace "x.x.x" with the gem's version).
+* L1:
+  * convert NFA to DFA
+  * convert DFA to REG
+  * convert DFA to minimal DFA
+  * Pumping Lemma _need to be fixed_
 
+L2:
+  * Chomsky normal form
+    * Epsilon free: remove rules like (S, ε) _need to be fixed_
+    * Chaining free: remove rules like (S, T) _need to be fixed_
+    * Normal cases: working :)
+  * CYK
+    * solve word problem
+    * CYK matrix
 
-# Publish your gem:
+## Examples
 
-Run gem push gem_name-x.x.x.gem to publish your gem to RubyGems.org (replace "x.x.x" with the gem's version).
