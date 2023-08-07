@@ -8,15 +8,15 @@ It solves some of the automata and formal languages problems:
   * convert DFA to minimal DFA
   * Pumping Lemma _need to be fixed_
 * L2:
+  * Epsilon free: remove rules like (S, ε) _need to be fixed_
+  * Chaining free: remove rules like (S, T) _need to be fixed_
+  * Normal cases: working :)
   * Chomsky normal form
-    * Epsilon free: remove rules like (S, ε) _need to be fixed_
-    * Chaining free: remove rules like (S, T) _need to be fixed_
-    * Normal cases: working :)
   * CYK
     * solve word problem
     * CYK matrix
 
-## Install
+## Installation
   * Option 1
     1. install `gem`
     2. call `gem install falafel` in the terminal
@@ -27,7 +27,7 @@ It solves some of the automata and formal languages problems:
     4. `gem install ./falafel-x.x.x.gem`, replace `x.x.x` with the version number
     5. use one of the examples in example folder or in this page
 
-## Examples
+## Usage examples
 
 - ### Example: NFA to DFA
   ```ruby
