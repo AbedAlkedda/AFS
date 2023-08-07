@@ -143,17 +143,57 @@ L2:
   ```
   ---
 
-- ### Exapmle: Chomsky normal form _Epsilon_
+- ### Exapmle: Chomsky normal form _Epsilon_ (needs some fixes)
   ```ruby
+    require 'falafel'
 
+    alphabet  = %w[a b c]
+    vars_set  = ['S']
+    start_var = 'S'
+
+    rules = { 'S' => [[]] }
+    rules['S'] << ['aSc']
+    rules['S'] << ['bSc']
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.epsilon_free
+
+    puts "Chomksy normal form: #{cfg.rules_ef_res}"
+
+    cfg.chomsky_nf cfg.rules_ef
+
+    word = 'aaaabbbbcccccccc'
+    cfg.cyk_run word
+    puts cfg.cyk_matrix.map(&:inspect)
+    puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
   ```
   #### Output
   ```Bash
+    Chomksy normal form: {"S"=>["aSc", "ac", "bSc", "bc"]}
+    ["A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S"]
+    [[], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H"]
+    [[], [], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H", "0"]
+    [[], [], [], "A", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H", "0", "0"]
+    [[], [], [], [], "B", "0", "0", "0", "0", "0", "0", "S", "H", "0", "0", "0"]
+    [[], [], [], [], [], "B", "0", "0", "0", "0", "S", "H", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], "B", "0", "0", "S", "H", "0", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], "B", "S", "H", "0", "0", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], "C", "0", "0", "0", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], "C", "0", "0", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], [], "C", "0", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], [], [], "C", "0", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], [], [], [], "C", "0", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], "C", "0", "0"]
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], "C", "0"]
+    [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], "C"]
+    word aaaabbbbcccccccc is in CFL
 
   ```
   ---
 
-- ### Exapmle: Chomsky normal form _Chaining_
+- ### Exapmle: Chomsky normal form _Chaining_ (needs some fixes)
   ```ruby
 
   ```

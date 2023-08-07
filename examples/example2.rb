@@ -15,6 +15,8 @@ cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
 cfg.epsilon_free
 
+puts "Chomksy normal form: #{cfg.rules_ef_res}"
+
 cfg.chomsky_nf cfg.rules_ef
 
 word = 'aaaabbbbcccccccc'
