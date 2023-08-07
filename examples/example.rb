@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require  'falafel'
+require 'falafel'
 
 d_a    = [[1, 1], [2, 2], [2, 1]]
 d_b    = [[1, 2]]

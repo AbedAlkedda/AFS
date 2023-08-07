@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'falafel'
 
 alphabet  = %w[a b c]
