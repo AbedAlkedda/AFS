@@ -96,11 +96,40 @@ L2:
 
 - ### Exapmle: DFA to minimal DFA
   ```ruby
+    require  'falafel'
 
+    d_a    = [[1, 1], [2, 2], [2, 1]]
+    d_b    = [[1, 2]]
+    states = [1, 2]
+    starts = [1]
+    finals = [1]
+
+    Falafel.new do |a|
+      a.build d_a, d_b, states: states, starts: starts, finals: finals
+      dfa = a.nfa_to_dfa
+      a.dfa_to_min dfa
+    end
   ```
   #### Output
   ```Bash
+    dfa:
+    finals: [1, 12]
+    states: [1, 2, 12, 0]
+    (1 ,'a', 1)
+    (2 ,'a', 12)
+    (0 ,'a', 0)
+    (12 ,'a', 12)
+    (1 ,'b', 2)
+    (2 ,'b', 0)
+    (0 ,'b', 0)
+    (12 ,'b', 2)
 
+    Q={1=>"p", 2=>"q", 12=>"r", 0=>"s"}
+    F={1=>"p", 12=>"r"}
+    {F, Q\F }={["p", "r"]}, {["q", "s"]}
+    R0=[["p", "p"], ["p", "r"], ["q", "q"], ["q", "s"], ["r", "p"], ["r", "r"], ["s", "q"], ["s", "s"]]
+    R1=[["p", "p"], ["p", "r"], ["q", "q"], ["r", "p"], ["r", "r"], ["s", "s"]]
+    R2=[["p", "p"], ["p", "r"], ["q", "q"], ["r", "p"], ["r", "r"], ["s", "s"]]
   ```
   ---
 
