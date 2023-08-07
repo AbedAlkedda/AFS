@@ -32,6 +32,8 @@ L2:
 
 - ### Exapmle: NFA to DFA
   ```ruby
+    require  'falafel'
+
     d_a    = [[1, 1], [2, 2], [2, 1]]
     d_b    = [[1, 2]]
     states = [1, 2]
@@ -61,11 +63,34 @@ L2:
 
 - ### Exapmle: NFA to REG
   ```ruby
+    require  'falafel'
 
+    d_a    = [[1, 1], [2, 2], [2, 1]]
+    d_b    = [[1, 2]]
+    states = [1, 2]
+    starts = [1]
+    finals = [1]
+
+    Falafel.new do |a|
+      a.build d_a, d_b, states: states, starts: starts, finals: finals
+      reg = a.nfa_to_reg
+      reg.print_matrix
+      puts "\nnfa to reg: #{reg.final_reg}"
+    end
   ```
   #### Output
   ```Bash
+    l0
+            |ε+a    |a  |
+            |b      |ε+a|
+    l1
+            |(a)*           |(a)*.b        |
+            |b.(a)*         |ε+a+(b.(a)*.a)|
+    l2
+            |(a)*+((a)*.b.(a+(b.(a)*.a))*.b.(a)*)   |(a)*.b.(a+(b.(a)*.a))*              |
+            |(a+(b.(a)*.a))*.(a)*.b                 |(ε+a+(b.(a)*.a))*                   |
 
+    nfa to reg: (a)*+((a)*.b.(a+(b.(a)*.a))*.b.(a)*)
   ```
   ---
 
