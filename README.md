@@ -143,7 +143,7 @@ L2:
   ```
   ---
 
-- ### Exapmle: Chomsky normal form _Epsilon_ (needs some fixes)
+- ### Exapmle: CYK _Epsilon_ (needs some fixes)
   ```ruby
     require 'falafel'
 
@@ -189,37 +189,64 @@ L2:
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], "C", "0"]
     [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], "C"]
     word aaaabbbbcccccccc is in CFL
-
   ```
   ---
 
-- ### Exapmle: Chomsky normal form _Chaining_ (needs some fixes)
+- ### Exapmle: CYK _Chaining_ (needs some fixes to solve word problem)
   ```ruby
+    require 'falafel'
 
+    alphabet  = %w[a b]
+    vars_set  = %w[S X Y]
+    start_var = 'S'
+
+    rules = { 'S' => [['X'], ['Y']] }
+    rules['X'] = [['aX']]
+    rules['Y'] = [['bY']]
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.chaining_free
+    puts cfg.rules_cf.inspect
   ```
   #### Output
   ```Bash
-
+    {"S"=>[["a", "X"], ["b", "Y"]], "X"=>[["a", "X"]], "Y"=>[["b", "Y"]]}
   ```
   ---
 
-- ### Exapmle: Chomsky normal form _Normal_
+- ### Exapmle: CYK _Normal_
   ```ruby
+    require 'falafel'
 
+    alphabet  = %w[a b]
+    vars_set  = %w[S]
+    start_var = 'S'
+
+    rules = { 'S' => [['b'], ['a'], ['aSS']] }
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.chomsky_nf nil
+
+    word = 'aabaabb'
+
+    cfg.cyk_run word
+    puts cfg.cyk_matrix.map(&:inspect)
+    puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
   ```
   #### Output
   ```Bash
-
-  ```
-  ---
-
-- ### Exapmle: CYK
-  ```ruby
-
-  ```
-  #### Output
-  ```Bash
-
+    ["A", "I", "S", "I", "S", "I", "S"]
+    [[], "A", "I", "S", "I", "S", "I"]
+    [[], [], "B", "I", "0", "I", "0"]
+    [[], [], [], "A", "I", "S", "I"]
+    [[], [], [], [], "A", "I", "S"]
+    [[], [], [], [], [], "B", "I"]
+    [[], [], [], [], [], [], "B"]
+    word aabaabb is in CFL
   ```
   ---
 

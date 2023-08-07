@@ -2,24 +2,19 @@
 
 require 'falafel'
 
-alphabet  = %w[a b c]
-vars_set  = ['S']
+alphabet  = %w[a b]
+vars_set  = %w[S]
 start_var = 'S'
 
-rules = { 'S' => [[]] }
-rules['S'] << ['aSc']
-rules['S'] << ['bSc']
+rules = { 'S' => [['b'], ['a'], ['aSS']] }
 
 falafel = Falafel.new {}
 cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-cfg.epsilon_free
+cfg.chomsky_nf nil
 
-puts "Chomksy normal form: #{cfg.rules_ef_res}"
+word = 'aabaabb'
 
-cfg.chomsky_nf cfg.rules_ef
-
-word = 'aaaabbbbcccccccc'
 cfg.cyk_run word
 puts cfg.cyk_matrix.map(&:inspect)
 puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
