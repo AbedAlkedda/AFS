@@ -159,7 +159,7 @@ It solves some of the automata and formal languages problems:
 
     cfg.epsilon_free
 
-    puts "Chomksy normal form: #{cfg.rules_ef_res}"
+    puts "new rules: #{cfg.rules_ef_res}"
 
     cfg.chomsky_nf cfg.rules_ef
 
@@ -170,7 +170,7 @@ It solves some of the automata and formal languages problems:
   ```
   #### Output
   ```Bash
-    Chomksy normal form: {"S"=>["aSc", "ac", "bSc", "bc"]}
+    new rules: {"S"=>["aSc", "ac", "bSc", "bc"]}
     ["A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S"]
     [[], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H"]
     [[], [], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H", "0"]
