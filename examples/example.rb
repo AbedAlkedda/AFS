@@ -20,24 +20,3 @@ Falafel.new do |a|
   reg.print_matrix
   puts "\nnfa to reg: #{reg.final_reg}"
 end
-
-pump = Falafel.new {}.pump_lemma
-
-# a^* b^*
-pump.lang = ->(w) { w.match?(/\Aa*b*\z/) }
-pump.word = 'aaabbb'
-u, v, w = pump.run
-
-# { a^i b^j | i /= j }
-pump.lang = ->(wrd) { wrd.count('a') != wrd.count('b') }
-words     = %w[aaaaaabb aaaaaabbbb aaaaabbb aaabbbb aaabbbbb aabbbb baabbbb]
-words.each do |word|
-  pump.word = word
-  u, v, w = pump.run
-  puts ",( \"#{word}\", Zerlegung { u = \"#{u}\" , v = \"#{v}\", w = \"#{w}\"} )"
-end
-
-# a(aa)^*
-pump.lang = ->(w) { w.match?(/a(aa)*/) }
-pump.word = 'aaa'
-u, v, w = pump.run

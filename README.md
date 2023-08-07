@@ -21,11 +21,11 @@ It solves some of the automata and formal languages problems:
     1. install `gem`
     2. call `gem install falafel` in the terminal
   * Option 2
-  1. clone this repo
-  2. `cd falafel`
-  3. `gem build falafel.gemspec`
-  4. `gem install ./falafel-x.x.x.gem`, replace `x.x.x` with the version number
-  5. use one of the examples in example folder or in this page
+    1. clone this repo
+    2. `cd falafel`
+    3. `gem build falafel.gemspec`
+    4. `gem install ./falafel-x.x.x.gem`, replace `x.x.x` with the version number
+    5. use one of the examples in example folder or in this page
 
 ## Examples
 
