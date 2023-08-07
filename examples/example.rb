@@ -15,8 +15,10 @@ Falafel.new do |a|
   puts
   dfa = a.nfa_to_dfa
   a.dfa_to_min dfa
-  puts "\nnfa to reg"
-  a.nfa_to_reg
+  puts "\nnfa to reg matrix"
+  reg = a.nfa_to_reg
+  reg.print_matrix
+  puts "\nnfa to reg: #{reg.final_reg}"
 end
 
 pump = Falafel.new {}.pump_lemma
