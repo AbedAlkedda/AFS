@@ -1,4 +1,4 @@
-# Automata Problem Solver
+# Automata Problem Solver (Mini)
 
 It solves some of the automata and formal languages problems:
 
@@ -7,8 +7,7 @@ It solves some of the automata and formal languages problems:
   * convert NFA to REG
   * convert DFA to minimal DFA
   * Pumping Lemma _need to be fixed_
-
-L2:
+* L2:
   * Chomsky normal form
     * Epsilon free: remove rules like (S, ε) _need to be fixed_
     * Chaining free: remove rules like (S, T) _need to be fixed_
