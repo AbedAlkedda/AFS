@@ -29,7 +29,7 @@ It solves some of the automata and formal languages problems:
 
 ## Examples
 
-- ### Exapmle: NFA to DFA
+- ### Example: NFA to DFA
   ```ruby
     require  'falafel'
 
@@ -60,7 +60,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: NFA to REG
+- ### Example: NFA to REG
   ```ruby
     require  'falafel'
 
@@ -93,7 +93,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: DFA to minimal DFA
+- ### Example: DFA to minimal DFA
   ```ruby
     require  'falafel'
 
@@ -132,7 +132,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: Pumping Lemma (ToDo)
+- ### Example: Pumping Lemma (ToDo)
   ```ruby
 
   ```
@@ -142,7 +142,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: CYK _Epsilon_ (needs some fixes)
+- ### Example: CYK _Epsilon_ (needs some fixes)
   ```ruby
     require 'falafel'
 
@@ -191,7 +191,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: CYK _Chaining_ (needs some fixes to solve word problem)
+- ### Example: CYK _Chaining_ (needs some fixes to solve word problem)
   ```ruby
     require 'falafel'
 
@@ -215,7 +215,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Exapmle: CYK _Normal_
+- ### Example: CYK _Normal_
   ```ruby
     require 'falafel'
 
