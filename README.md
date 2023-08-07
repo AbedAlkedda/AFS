@@ -57,13 +57,77 @@ L2:
     (0 ,'b', 0)
     (12 ,'b', 2)
   ```
+  ---
+
 - ### Exapmle: NFA to REG
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: DFA to minimal DFA
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: Pumping Lemma
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: Chomsky normal form _Epsilon_
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: Chomsky normal form _Chaining_
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: Chomsky normal form _Normal_
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
+
 - ### Exapmle: CYK
+  ```ruby
+
+  ```
+  #### Output
+  ```Bash
+
+  ```
+  ---
 
 ## Coming soon
   * Run using container
