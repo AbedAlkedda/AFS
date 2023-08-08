@@ -19,11 +19,9 @@ class ChomskyNF
   end
 
   def simplify(rules)
-    # simplifier = ChomskyNFSimplifier.new
+    simplifier = ChomskyNFSimplifier.new
 
-    # simplifier.run rules, @alphabet
-
-    rules
+    simplifier.run rules, @alphabet
   end
 
   private
