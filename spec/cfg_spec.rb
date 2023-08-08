@@ -80,8 +80,8 @@ RSpec.describe 'CYK implementing 3' do
 
     cfg.epsilon_free
     cfg.chomsky_nf cfg.rules_ef
-    x = 311
-    y = 311
+    x = 13
+    y = 13
     z = x + y
     check_results = { 'ac' => true,
                       'abcc' => true,

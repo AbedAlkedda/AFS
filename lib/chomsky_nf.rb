@@ -46,15 +46,15 @@ class ChomskyNF
   end
 
   def _handle_all_rule(new_rules)
-    new_rules_buffer = {}
+    new_rules_buffer = []
 
     new_rules.each do |var, rules|
       next if _is_character? rules
 
-      new_rules_buffer = _new_rules_buffer rules, var
+      new_rules_buffer << _new_rules_buffer(rules, var)
     end
 
-    new_rules.merge! new_rules_buffer
+    new_rules.merge! new_rules_buffer.reduce(&:merge)
   end
 
   def _is_character?(value)

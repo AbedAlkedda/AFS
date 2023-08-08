@@ -61,7 +61,7 @@ class EpsilonFree
       res << epsilon_free_word.delete(e_class) if possibilities.size == 1
     end
 
-    res
+    res.uniq.reject(&:nil?)
   end
 
   def _new_rules_epsilon_location(s_rule, e_class)
