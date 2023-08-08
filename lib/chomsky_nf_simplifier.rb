@@ -30,7 +30,7 @@ class ChomskyNFSimplifier
         next unless val.size == 1 && alphabet.include?(val.downcase)
 
         vars[key] ||= []
-        vars[key] << val
+        vars[key] << val unless vars[key].include?(val)
       end
     end
 
