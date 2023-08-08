@@ -10,7 +10,7 @@ require_relative 'chaining_free'
 # generates random words
 class CFG
   attr_accessor :start_var, :rules
-  attr_reader   :rules_ef,     :rules_cf,     :rnd_words, :reachables,
+  attr_reader   :rules_ef,     :rules_cf,     :rnd_words,
                 :rules_ef_res, :rules_cf_res, :chomsky_nf_rules,
                 :cyk_matrix,   :is_in_l
 
@@ -18,7 +18,6 @@ class CFG
     @start_var  = start_var
     @rules      = _rules rules
     @rnd_words  = []
-    @reachables = []
     @vars       = vars
     @alphabet   = alphabet
   end
@@ -33,21 +32,6 @@ class CFG
 
       break if @rnd_words.size == count
     end
-  end
-
-  def var_reachable?
-    @rules[@start_var].each do |rule|
-      @vars.each { |var| @reachables << var if rule.include? var }
-    end
-    @reachables.uniq!
-  end
-
-  def var_productive?
-    ''
-  end
-
-  def var_reduced?
-    ''
   end
 
   def epsilon_free
