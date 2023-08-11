@@ -7,7 +7,7 @@ class ChomskyNFSimplifier
 
     return new_rules if vars_with_one_letter.empty?
 
-    extendible_rules = _find_extendible_rules new_rules, vars_with_one_letter
+    extendible_rules = _find_extendible_rules new_rules, vars_with_one_letter.keys
 
     return new_rules if extendible_rules.empty?
 
@@ -54,18 +54,18 @@ class ChomskyNFSimplifier
     val.size == 1 && alphabet.include?(val.downcase)
   end
 
-  def _find_extendible_rules(new_rules, vars)
+  def _find_extendible_rules(new_rules, rules_keys)
     extendible = {}
 
-    new_rules.each do |key, val|
-      next if val.is_a?(String)
+    filterd_rules = new_rules.reject { |_, rules| rules.is_a?(String) }
 
-      val.each do |v|
-        vars.each_key do |k|
-          next unless v.include?(k)
+    filterd_rules.each do |letter, rules|
+      rules_keys.each do |rules_key|
+        rules.each do |rule|
+          next unless rule.include?(rules_key)
 
-          extendible[key] ||= []
-          extendible[key] << val.select { |x| x.include? k }
+          extendible[letter] ||= []
+          extendible[letter] << rule
         end
       end
     end
