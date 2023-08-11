@@ -3,24 +3,17 @@
 # simplify chomsky normal form
 class ChomskyNFSimplifier
   def run(new_rules, alphabet)
-    # puts "new_rules before: #{new_rules}"
     vars_with_one_letter = _vars_with_one_letter new_rules, alphabet
-
-    puts "vars_with_one_letter: #{vars_with_one_letter}"
 
     return new_rules if vars_with_one_letter.empty?
 
     extendible_rules = _find_extendible_rules new_rules, vars_with_one_letter
 
-    puts "extendible_rules: #{extendible_rules}"
-
     return new_rules if extendible_rules.empty?
 
-    missing_rules = _generate_missing_rules extendible_rules, vars_with_one_letter
+    missing_rules = _missing_rules extendible_rules, vars_with_one_letter
 
     _add_missing_rules missing_rules, new_rules
-
-    # puts "new_rules after 2: #{new_rules}"
 
     new_rules
   end
@@ -34,7 +27,7 @@ class ChomskyNFSimplifier
 
   #   return new_rules if rules.empty?
 
-  #   missing_rules = _generate_missing_rules rules, vars_with_one_letter
+  #   missing_rules = _missing_rules rules, vars_with_one_letter
 
   #   _add_missing_rules missing_rules, new_rules
 
@@ -80,7 +73,7 @@ class ChomskyNFSimplifier
     extendible
   end
 
-  def _generate_missing_rules(rules, vars)
+  def _missing_rules(rules, vars)
     res = {}
 
     rules.each do |var_rule, nfs|
@@ -115,7 +108,9 @@ class ChomskyNFSimplifier
   end
 
   def _add_missing_rules(missing_rules, new_rules)
-    missing_rules.each { |key, val| new_rules[key] = val.flatten.uniq! }
+    missing_rules.each do |key, val|
+      new_rules[key] = val.flatten.uniq
+    end
   end
 
   def _check_special_case(nf, res, var_rule, vars)
