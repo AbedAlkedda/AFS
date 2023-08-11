@@ -279,7 +279,6 @@ It solves some of the automata and formal languages problems:
     cfg.cyk_run word
     puts cfg.cyk_matrix.map(&:inspect)
     puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
-
   ```
   #### Output
   ```Bash
