@@ -8,13 +8,12 @@ It solves some of the automata and formal languages problems:
   * convert DFA to minimal DFA
   * Pumping Lemma _need to be fixed_
 * L2:
-  * Epsilon free: remove rules like (S, ε) _need to be fixed_
-  * Chaining free: remove rules like (S, T) _need to be fixed_
-  * Normal cases: working :)
-  * Chomsky normal form
+  * Epsilon free: remove rules like (S, ε)
+  * Chaining free: remove rules like (S, T)
+  * find Chomsky normal forms
   * CYK
     * solve word problem
-    * CYK matrix
+    * print CYK matrix
 
 ## Installation
   * Option 1
@@ -142,7 +141,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Example: CYK _Epsilon_ (needs some fixes)
+- ### Example: CYK _Epsilon_
   ```ruby
     require 'falafel'
 
@@ -191,7 +190,7 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Example: CYK _Chaining_ (needs some fixes to solve word problem)
+- ### Example: CYK _Chaining_
   ```ruby
     require 'falafel'
 
