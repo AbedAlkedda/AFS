@@ -6,17 +6,17 @@ class ChomskyNFSimplifier
     # puts "new_rules before: #{new_rules}"
     vars_with_one_letter = _vars_with_one_letter new_rules, alphabet
 
-    # puts "vars_with_one_letter: #{vars_with_one_letter}"
+    puts "vars_with_one_letter: #{vars_with_one_letter}"
 
     return new_rules if vars_with_one_letter.empty?
 
-    rules = _find_modify_rules new_rules, vars_with_one_letter
+    extendible_rules = _find_extendible_rules new_rules, vars_with_one_letter
 
-    # puts "new_rules after 1: #{new_rules}"
+    puts "extendible_rules: #{extendible_rules}"
 
-    return new_rules if rules.empty?
+    return new_rules if extendible_rules.empty?
 
-    missing_rules = _generate_missing_rules rules, vars_with_one_letter
+    missing_rules = _generate_missing_rules extendible_rules, vars_with_one_letter
 
     _add_missing_rules missing_rules, new_rules
 
@@ -30,7 +30,7 @@ class ChomskyNFSimplifier
 
   #   return new_rules if vars_with_one_letter.empty?
 
-  #   rules = _find_modify_rules new_rules, vars_with_one_letter
+  #   rules = _find_extendible_rules new_rules, vars_with_one_letter
 
   #   return new_rules if rules.empty?
 
@@ -61,8 +61,8 @@ class ChomskyNFSimplifier
     val.size == 1 && alphabet.include?(val.downcase)
   end
 
-  def _find_modify_rules(new_rules, vars)
-    modify = {}
+  def _find_extendible_rules(new_rules, vars)
+    extendible = {}
 
     new_rules.each do |key, val|
       next if val.is_a?(String)
@@ -71,15 +71,13 @@ class ChomskyNFSimplifier
         vars.each_key do |k|
           next unless v.include?(k)
 
-          res = val.select { |x| x.include? k }
-
-          modify[key] ||= []
-          modify[key] << res
+          extendible[key] ||= []
+          extendible[key] << val.select { |x| x.include? k }
         end
       end
     end
 
-    modify
+    extendible
   end
 
   def _generate_missing_rules(rules, vars)
