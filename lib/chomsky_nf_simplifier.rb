@@ -3,15 +3,15 @@
 # simplify chomsky normal form
 class ChomskyNFSimplifier
   def run(new_rules, alphabet)
-    var_has_one_letter = _var_has_one_letter new_rules, alphabet
+    vars_with_one_letter = _vars_with_one_letter new_rules, alphabet
 
-    return new_rules if var_has_one_letter.empty?
+    return new_rules if vars_with_one_letter.empty?
 
-    rules = _find_modify_rules new_rules, var_has_one_letter
+    rules = _find_modify_rules new_rules, vars_with_one_letter
 
     return new_rules if rules.empty?
 
-    missing_rules = _generate_missing_rules rules, var_has_one_letter
+    missing_rules = _generate_missing_rules rules, vars_with_one_letter
 
     _add_missing_rules missing_rules, new_rules
 
@@ -20,7 +20,7 @@ class ChomskyNFSimplifier
 
   private
 
-  def _var_has_one_letter(new_rules, alphabet)
+  def _vars_with_one_letter(new_rules, alphabet)
     vars = {}
 
     new_rules.each do |key, values|
