@@ -122,26 +122,84 @@ RSpec.describe 'CYK implementing 4' do
   end
 end
 
-# RSpec.describe 'CYK implementing 5' do
-#   it 'CYK word problem with chaining' do
-#     alphabet  = %w[a b]
-#     vars_set  = %w[S X Y]
-#     start_var = 'S'
-#     rules = { 'S' => [['X'], ['Y']], 'X' => [[], ['aX']], 'Y' => [[], ['bY']] }
+RSpec.describe 'CYK implementing 5' do
+  it 'CYK word problem with chaining and Epsilon' do
+    alphabet  = %w[a b]
+    vars_set  = %w[S X Y]
+    start_var = 'S'
+    rules = { 'S' => [['X'], ['Y']], 'X' => [[], ['aX']], 'Y' => [[], ['bY']] }
 
-#     falafel = Falafel.new {}
-#     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-#     cfg.epsilon_free
+    cfg.chaining_free
 
-#     cfg.chomsky_nf cfg.rules_ef nil
+    cfg.epsilon_free cfg.rules_cf
 
-#     check_results = { 'aaa' => true, 'bbb' => true, 'bbba' => false }
+    cfg.chomsky_nf cfg.rules_ef
 
-#     check_results.each do |word, res|
-#       cfg.cyk_run word
-#       result = cfg.is_in_l
-#       expect(result).to eq(res)
-#     end
-#   end
-# end
+    check_results = { 'a' * 10 => true, 'aaa' => true, 'bbb' => true, 'bbba' => false }
+
+    check_results.each do |word, res|
+      cfg.cyk_run word
+      result = cfg.is_in_l
+      expect(result).to eq(res)
+    end
+  end
+end
+
+RSpec.describe 'CYK implementing 5' do
+  it 'CYK word problem with chaining' do
+    alphabet  = %w[a b]
+    vars_set  = %w[S X Y]
+    start_var = 'S'
+    rules = { 'S' => [['X'], ['Y'], ['a']], 'X' => [['aX']], 'Y' => [['bY']] }
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.chaining_free
+
+    cfg.chomsky_nf cfg.rules_cf
+
+    check_results = { 'a' * 10 => false,
+                      'aaa' => false,
+                      'bbb' => false,
+                      'bbba' => false
+                    }
+
+    check_results.each do |word, res|
+      cfg.cyk_run word
+      result = cfg.is_in_l
+      expect(result).to eq(res)
+    end
+  end
+end
+
+RSpec.describe 'CYK implementing 6' do
+  it 'CYK word problem with chaining' do
+    alphabet  = %w[a b]
+    vars_set  = %w[S X Y]
+    start_var = 'S'
+    rules = { 'S' => [['X'], ['Y']], 'X' => [['aX'], ['a']], 'Y' => [['bY']] }
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.chaining_free
+
+    cfg.chomsky_nf cfg.rules_cf
+
+    check_results = { 'a' * 10 => true,
+                      'a' * 20 => true,
+                      'bbb' => false,
+                      'aaaaaab' => false
+                    }
+
+    check_results.each do |word, res|
+      cfg.cyk_run word
+      result = cfg.is_in_l
+      expect(result).to eq(res)
+    end
+  end
+end

@@ -34,9 +34,9 @@ class CYK
 
         next if i == j
 
-        helper_var = _helper_var i, j
-
-        @matrix[i][j] = _add_to_matrix helper_var
+        helper_var      = _helper_var i, j
+        matrix_ele_info = _matrix_ele_info i, j
+        @matrix[i][j]   = _add_to_matrix helper_var, matrix_ele_info
       end
     end
   end
@@ -55,17 +55,41 @@ class CYK
     res
   end
 
-  def _add_to_matrix(rule)
-    res = '0'
-    return if rule == res
+  def _matrix_ele_info(i, j)
+    res = {}
+
+    res['i'] = i
+    res['j'] = j
+    res['row_c'] = @matrix.count
+
+    res
+  end
+
+  def _add_to_matrix(helper_var, matrix_ele_info)
+    matrix_ele = '0'
+    return if helper_var == matrix_ele
+
+    keys = []
 
     @rules.each do |key, vals|
       vals.each do |val|
-        res = key if val == rule
+        keys << key if val == helper_var
       end
     end
 
-    res
+    _matrix_ele keys, matrix_ele_info
+  end
+
+  def _matrix_ele(keys, matrix_ele_info)
+    return 'S' if keys.include?('S') && _is_last_element?(matrix_ele_info)
+
+    return keys.last if keys.size == 1
+
+    keys.reject { |key| key == 'S' }.last || '0'
+  end
+
+  def _is_last_element?(matrix_ele_info)
+    matrix_ele_info['i'].zero? && matrix_ele_info['j'] == matrix_ele_info['row_c'] - 1
   end
 
   def _is_in_l?
