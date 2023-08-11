@@ -12,7 +12,7 @@ RSpec.describe 'CYK implementing 0' do
     falafel = Falafel.new {}
     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-    cfg.epsilon_free
+    cfg.epsilon_free nil
     cfg.chomsky_nf cfg.rules_ef
 
     check_results = { 'ab' => true, 'aabb' => true, 'aabbb' => false }
@@ -80,7 +80,7 @@ RSpec.describe 'CYK implementing 3' do
     falafel = Falafel.new {}
     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-    cfg.epsilon_free
+    cfg.epsilon_free nil
     cfg.chomsky_nf cfg.rules_ef
     x = 13
     y = 13
@@ -108,7 +108,7 @@ RSpec.describe 'CYK implementing 4' do
     falafel = Falafel.new {}
     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
-    cfg.epsilon_free
+    cfg.epsilon_free nil
 
     cfg.chomsky_nf cfg.rules_ef
 
@@ -121,3 +121,27 @@ RSpec.describe 'CYK implementing 4' do
     end
   end
 end
+
+# RSpec.describe 'CYK implementing 5' do
+#   it 'CYK word problem with chaining' do
+#     alphabet  = %w[a b]
+#     vars_set  = %w[S X Y]
+#     start_var = 'S'
+#     rules = { 'S' => [['X'], ['Y']], 'X' => [[], ['aX']], 'Y' => [[], ['bY']] }
+
+#     falafel = Falafel.new {}
+#     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+#     cfg.epsilon_free
+
+#     cfg.chomsky_nf cfg.rules_ef nil
+
+#     check_results = { 'aaa' => true, 'bbb' => true, 'bbba' => false }
+
+#     check_results.each do |word, res|
+#       cfg.cyk_run word
+#       result = cfg.is_in_l
+#       expect(result).to eq(res)
+#     end
+#   end
+# end

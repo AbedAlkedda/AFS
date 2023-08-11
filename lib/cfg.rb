@@ -34,9 +34,9 @@ class CFG
     end
   end
 
-  def epsilon_free
+  def epsilon_free(custom_rule)
     e_free        = EpsilonFree.new
-    @rules_ef_res = e_free.run @rules
+    @rules_ef_res = e_free.run custom_rule || @rules
     @rules_ef     = e_free.rebuild_rules @rules, @rules_ef_res
   end
 
