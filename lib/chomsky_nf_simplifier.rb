@@ -13,7 +13,7 @@ class ChomskyNFSimplifier
 
     missing_rules = _missing_rules extendible_rules, vars_with_one_letter
 
-    _add_missing_rules missing_rules, new_rules
+    # _add_missing_rules missing_rules, new_rules
 
     new_rules
   end
@@ -73,18 +73,39 @@ class ChomskyNFSimplifier
     extendible
   end
 
-  def _missing_rules(rules, vars)
+  # def _missing_rules(rules, vars)
+  #   res = {}
+
+  #   rules.each do |var_rule, nfs|
+  #     nfs.flatten.each do |nf|
+  #       vars.each do |match_char, replacement_chars|
+  #         replacement_chars.each do |rc|
+  #           new_rules = _combinations nf, rc, match_char
+  #           res[var_rule] ||= []
+  #           res[var_rule] << new_rules
+  #         end
+  #       end
+  #       _check_special_case nf, res, var_rule, vars
+  #     end
+  #   end
+
+  #   res
+  # end
+
+  def _missing_rules(extendible_rules, vars)
     res = {}
 
-    rules.each do |var_rule, nfs|
-      nfs.flatten.each do |nf|
+    extendible_rules.each do |var_rule, nfs|
+      nfs.each do |nf|
         vars.each do |match_char, replacement_chars|
           replacement_chars.each do |rc|
-            new_rules = _combinations nf, rc, match_char
             res[var_rule] ||= []
-            res[var_rule] << new_rules
+            res[var_rule] << _combinations(nf, rc, match_char)
           end
         end
+
+        res[var_rule] = res[var_rule].flatten.uniq
+
         _check_special_case nf, res, var_rule, vars
       end
     end
