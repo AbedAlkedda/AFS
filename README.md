@@ -197,20 +197,26 @@ It solves some of the automata and formal languages problems:
     alphabet  = %w[a b]
     vars_set  = %w[S X Y]
     start_var = 'S'
-
-    rules = { 'S' => [['X'], ['Y']] }
-    rules['X'] = [['aX']]
-    rules['Y'] = [['bY']]
+    rules = { 'S' => [['X'], ['Y']], 'X' => [['aX'], ['a']], 'Y' => [['bY']] }
 
     falafel = Falafel.new {}
     cfg     = falafel.cfg alphabet, vars_set, start_var, rules
 
     cfg.chaining_free
-    puts cfg.rules_cf.inspect
+    cfg.chomsky_nf cfg.rules_cf
+
+    word = 'aaaa'
+    cfg.cyk_run word
+    puts cfg.cyk_matrix.map(&:inspect)
+    puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
   ```
   #### Output
   ```Bash
-    {"S"=>[["a", "X"], ["b", "Y"]], "X"=>[["a", "X"]], "Y"=>[["b", "Y"]]}
+    ["A", "X", "X", "S"]
+    [[], "A", "X", "X"]
+    [[], [], "A", "X"]
+    [[], [], [], "A"]
+    word aaaa is in CFL
   ```
   ---
 
@@ -245,6 +251,52 @@ It solves some of the automata and formal languages problems:
     [[], [], [], [], [], "B", "I"]
     [[], [], [], [], [], [], "B"]
     word aabaabb is in CFL
+  ```
+  ---
+
+- ### Example: CYK _Epsilon_ with _Chaining_
+  ```ruby
+    require 'falafel'
+
+    alphabet  = %w[a b c]
+    vars_set  = %w[S X]
+    start_var = 'S'
+    rules = { 'S' => [[], ['X'], ['aSbS']],
+              'X' => [['c']] }
+
+    falafel = Falafel.new {}
+    cfg     = falafel.cfg alphabet, vars_set, start_var, rules
+
+    cfg.chaining_free
+
+    cfg.epsilon_free cfg.rules_cf
+
+    cfg.chomsky_nf cfg.rules_ef
+
+    puts cfg.chomsky_nf_rules.inspect
+    word = 'aacbcbacbc'
+
+    cfg.cyk_run word
+    puts cfg.cyk_matrix.map(&:inspect)
+    puts "word #{word} is #{cfg.is_in_l ? '' : 'not '}in CFL"
+
+  ```
+  #### Output
+  ```Bash
+    {"A"=>"a", "B"=>"b", "C"=>"c", "S"=>["AH", "AJ", "AI", "AB", "C", "C"], "X"=>["C"], "H"=>["SI", "CI"], "I"=>["BS", "BC"], "J"=>["SB", "CB"]}
+
+    ["A", "0", "0", "0", "0", "S", "0", "0", "S", "S"]
+    [[], "A", "0", "S", "S", "J", "0", "0", "H", "H"]
+    [[], [], "C", "J", "H", "0", "0", "0", "0", "0"]
+    [[], [], [], "B", "I", "0", "0", "0", "0", "0"]
+    [[], [], [], [], "C", "J", "0", "0", "H", "H"]
+    [[], [], [], [], [], "B", "0", "0", "I", "I"]
+    [[], [], [], [], [], [], "A", "0", "S", "S"]
+    [[], [], [], [], [], [], [], "C", "J", "H"]
+    [[], [], [], [], [], [], [], [], "B", "I"]
+    [[], [], [], [], [], [], [], [], [], "C"]
+
+    word aacbcbacbc is in CFL
   ```
   ---
 
