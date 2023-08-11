@@ -3,11 +3,16 @@
 # simplify chomsky normal form
 class ChomskyNFSimplifier
   def run(new_rules, alphabet)
+    # puts "new_rules before: #{new_rules}"
     vars_with_one_letter = _vars_with_one_letter new_rules, alphabet
+
+    # puts "vars_with_one_letter: #{vars_with_one_letter}"
 
     return new_rules if vars_with_one_letter.empty?
 
     rules = _find_modify_rules new_rules, vars_with_one_letter
+
+    # puts "new_rules after 1: #{new_rules}"
 
     return new_rules if rules.empty?
 
@@ -15,8 +20,26 @@ class ChomskyNFSimplifier
 
     _add_missing_rules missing_rules, new_rules
 
+    # puts "new_rules after 2: #{new_rules}"
+
     new_rules
   end
+
+  # def run(new_rules, alphabet)
+  #   vars_with_one_letter = _vars_with_one_letter new_rules, alphabet
+
+  #   return new_rules if vars_with_one_letter.empty?
+
+  #   rules = _find_modify_rules new_rules, vars_with_one_letter
+
+  #   return new_rules if rules.empty?
+
+  #   missing_rules = _generate_missing_rules rules, vars_with_one_letter
+
+  #   _add_missing_rules missing_rules, new_rules
+
+  #   new_rules
+  # end
 
   private
 
@@ -24,17 +47,18 @@ class ChomskyNFSimplifier
     vars = {}
 
     new_rules.each do |key, values|
+      # skip simple rules like (A, a), (B, b),...
       next if values.size == 1
 
-      values.each do |val|
-        next unless val.size == 1 && alphabet.include?(val.downcase)
-
-        vars[key] ||= []
-        vars[key] << val unless vars[key].include?(val)
-      end
+      letters   = values.select { |val| _is_letter val, alphabet }.uniq
+      vars[key] = letters
     end
 
     vars
+  end
+
+  def _is_letter(val, alphabet)
+    val.size == 1 && alphabet.include?(val.downcase)
   end
 
   def _find_modify_rules(new_rules, vars)
