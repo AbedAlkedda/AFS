@@ -6,7 +6,7 @@ It solves some of the automata and formal languages problems:
   * convert NFA to DFA
   * convert NFA to REG
   * convert DFA to minimal DFA
-  * Pumping Lemma _need to be fixed_
+  * Pumping Lemma
 * L2:
   * Epsilon free: remove rules like (S, ε)
   * Chaining free: remove rules like (S, T)
