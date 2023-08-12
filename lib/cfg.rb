@@ -3,7 +3,7 @@
 require_relative 'cyk'
 require_relative 'chomsky_nf'
 require_relative 'epsilon_free'
-require_relative 'chaining_free'
+require_relative 'chomsky_helper/chaining_free'
 
 # Samll CFG impletation
 # Generate words and check if words are the @lang
@@ -41,7 +41,7 @@ class CFG
   end
 
   def chaining_free
-    c_free        = ChainingFree.new
+    c_free        = ChomskyHelper::ChainingFree.new
     @rules_cf_res = c_free.run @rules, @vars
     @rules_cf     = c_free.rebuild_rules @rules_cf_res
   end
