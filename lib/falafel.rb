@@ -107,7 +107,7 @@ class Falafel
   def pump_lemma
     require_relative 'pump'
 
-    Pump.new lang: nil, word: nil, n: 2, k: 20
+    Pump.new lang: nil, word: nil
   end
 
   def cfg(alphabet, vars_set, start_var, rules)
@@ -118,7 +118,6 @@ class Falafel
 
   private
 
-  # alle bilder eine menge m unter r
   def _image(m, r)
     m.flat_map { |x| r.map { |y, z| z if x == y }.compact }.sort.uniq
   end
