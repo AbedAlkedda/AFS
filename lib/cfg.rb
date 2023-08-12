@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'cyk'
-require_relative 'chomsky_nf'
+require_relative 'chomsky_helper/cyk'
+require_relative 'chomsky_helper/chomsky_nf'
 require_relative 'chomsky_helper/epsilon_free'
 require_relative 'chomsky_helper/chaining_free'
 
@@ -47,14 +47,14 @@ class CFG
   end
 
   def chomsky_nf(custom_rule)
-    chomsky = ChomskyNF.new
+    chomsky = ChomskyHelper::ChomskyNF.new
     rules   = chomsky.run custom_rule || @rules, @alphabet
 
     @chomsky_nf_rules = chomsky.simplify rules
   end
 
   def cyk_run(word)
-    cyk = CYK.new word, @chomsky_nf_rules
+    cyk = ChomskyHelper::CYK.new word, @chomsky_nf_rules
 
     cyk.run
 
