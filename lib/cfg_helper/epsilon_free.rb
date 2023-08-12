@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ChomskyHelper
+module CFGHelper
   # used to clear a CFG from the epsilon rules
   class EpsilonFree
     def run(rules)

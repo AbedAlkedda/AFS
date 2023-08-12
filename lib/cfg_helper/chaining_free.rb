@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ChomskyHelper
+module CFGHelper
   # remove chaining rules from CFG
   class ChainingFree
     def run(rules, vars)

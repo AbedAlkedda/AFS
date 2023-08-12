@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative 'chomsky_helper/cyk'
-require_relative 'chomsky_helper/chomsky_nf'
-require_relative 'chomsky_helper/epsilon_free'
-require_relative 'chomsky_helper/chaining_free'
+require_relative 'cfg_helper/cyk'
+require_relative 'cfg_helper/chomsky_nf'
+require_relative 'cfg_helper/epsilon_free'
+require_relative 'cfg_helper/chaining_free'
 
 # Samll CFG impletation
 # Generate words and check if words are the @lang
@@ -35,26 +35,26 @@ class CFG
   end
 
   def epsilon_free(custom_rule)
-    e_free        = ChomskyHelper::EpsilonFree.new
+    e_free        = CFGHelper::EpsilonFree.new
     @rules_ef_res = e_free.run custom_rule || @rules
     @rules_ef     = e_free.rebuild_rules @rules, @rules_ef_res
   end
 
   def chaining_free
-    c_free        = ChomskyHelper::ChainingFree.new
+    c_free        = CFGHelper::ChainingFree.new
     @rules_cf_res = c_free.run @rules, @vars
     @rules_cf     = c_free.rebuild_rules @rules_cf_res
   end
 
   def chomsky_nf(custom_rule)
-    chomsky = ChomskyHelper::ChomskyNF.new
+    chomsky = CFGHelper::ChomskyNF.new
     rules   = chomsky.run custom_rule || @rules, @alphabet
 
     @chomsky_nf_rules = chomsky.simplify rules
   end
 
   def cyk_run(word)
-    cyk = ChomskyHelper::CYK.new word, @chomsky_nf_rules
+    cyk = CFGHelper::CYK.new word, @chomsky_nf_rules
 
     cyk.run
 

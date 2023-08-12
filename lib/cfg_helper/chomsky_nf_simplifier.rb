@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ChomskyHelper
+module CFGHelper
   # simplify chomsky normal form
   class ChomskyNFSimplifier
     def run(new_rules, alphabet)

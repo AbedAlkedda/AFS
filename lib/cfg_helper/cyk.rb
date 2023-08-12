@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ChomskyHelper
+module CFGHelper
   # Implemention of cyk algo.
   class CYK
     attr_reader :matrix, :is_in_l

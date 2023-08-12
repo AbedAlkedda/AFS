@@ -2,7 +2,7 @@
 
 require_relative 'chomsky_nf_simplifier'
 
-module ChomskyHelper
+module CFGHelper
   # convert to Chomsky Normal Form
   class ChomskyNF
     def run(rules, alphabet)
@@ -20,7 +20,7 @@ module ChomskyHelper
     end
 
     def simplify(rules)
-      simplifier = ChomskyHelper::ChomskyNFSimplifier.new
+      simplifier = CFGHelper::ChomskyNFSimplifier.new
 
       simplifier.run rules, @alphabet
     end
