@@ -131,13 +131,39 @@ It solves some of the automata and formal languages problems:
   ```
   ---
 
-- ### Example: Pumping Lemma (ToDo)
+- ### Example: Pumping Lemma
+  #### Language a^* b^*
   ```ruby
+    require  'falafel'
+
+    pump = Falafel.new {}
+    lang   = ->(w) { w.match?(/\Aa*b*\z/) }
+    length = 3
+    pump_lemma = pump.pump_lemma lang, length
+
+    words = %w[aaaaa aaaab aaab aabb abb]
+
+    words.each do |word|
+      pump_lemma.word = word
+      pump_lemma.run show_pros: false
+      r, s, t = pump_lemma.decomposition
+      puts "is_regular? #{pump_lemma.is_regular}"
+      puts "\"#{pump_lemma.word}\", decomposition { r = \"#{r}\" , s = \"#{s}\", t = \"#{t}\"}"
+    end
 
   ```
   #### Output
   ```Bash
-
+    is_regular? true
+    "aaaaa", decomposition { r = "aaaa" , s = "a", t = ""}
+    is_regular? false
+    "aaaab", decomposition { r = "aa" , s = "aab", t = ""}
+    is_regular? false
+    "aaab", decomposition { r = "a" , s = "aab", t = ""}
+    is_regular? false
+    "aabb", decomposition { r = "" , s = "aab", t = "b"}
+    is_regular? false
+    "abb", decomposition { r = "" , s = "abb", t = ""}
   ```
   ---
 
@@ -158,8 +184,6 @@ It solves some of the automata and formal languages problems:
 
     cfg.epsilon_free
 
-    puts "new rules: #{cfg.rules_ef_res}"
-
     cfg.chomsky_nf cfg.rules_ef
 
     word = 'aaaabbbbcccccccc'
@@ -169,7 +193,6 @@ It solves some of the automata and formal languages problems:
   ```
   #### Output
   ```Bash
-    new rules: {"S"=>["aSc", "ac", "bSc", "bc"]}
     ["A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S"]
     [[], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H"]
     [[], [], "A", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "S", "H", "0"]
