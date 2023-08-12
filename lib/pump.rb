@@ -22,35 +22,10 @@ class Pump
 
     r, s, t = ''
 
-    if @word.length == @length
-      @word.length.times do |i|
-        pump_up_down_res = []
-        r = @word[0...i] || ''
-        s = @word[i...i + @length] || ''
-        t = @word[i + @length..] || ''
-
-        20.times do |k|
-          # puts "r: #{r}, s: #{s}, t: #{t}, k: #{k}, r + s * k + t: #{r + s * k + t}"
-          pump_up_down_res << (s.length.positive? && @lang.call(r + s * k + t))
-        end
-
-        if pump_up_down_res.include? false
-          @is_regular = false
-          return @decomposition = [r, s, t]
-        end
-
-        @decomposition = [r, s, t]
-      end
-
-      return
-    end
-
-    (0...@word.length - @length).each do |i|
+    @word.length.times do |leng|
       pump_up_down_res = []
-      r = @word[0...i]
-      s = @word[i...i + @length]
-      t = @word[i + @length..]
 
+      r, s, t = _sigma_chars leng
       20.times do |k|
         # puts "r: #{r}, s: #{s}, t: #{t}, k: #{k}, r + s * k + t: #{r + s * k + t}"
         pump_up_down_res << (s.length.positive? && @lang.call(r + s * k + t))
@@ -62,5 +37,16 @@ class Pump
       end
     end
     @decomposition = [r, s, t]
+  end
+
+  private
+
+  # ∃r, s, t ∈ Σ^∗
+  def _sigma_chars(leng)
+    r = @word[0...leng] || ''
+    s = @word[leng...leng + @length] || ''
+    t = @word[leng + @length..] || ''
+
+    [r, s, t]
   end
 end
