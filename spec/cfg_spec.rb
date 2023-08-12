@@ -193,13 +193,36 @@ RSpec.describe 'CYK implementing 6' do
     check_results = { 'a' * 10 => true,
                       'a' * 20 => true,
                       'bbb' => false,
-                      'aaaaaab' => false
-                    }
+                      'aaaaaab' => false }
 
     check_results.each do |word, res|
       cfg.cyk_run word
       result = cfg.is_in_l
       expect(result).to eq(res)
+    end
+  end
+end
+
+RSpec.describe 'Pumping Lemma 1' do
+  it 'Language a^* b^*' do
+    pump       = Falafel.new {}
+    lang       = ->(w) { w.match?(/\Aa*b*\z/) }
+    length     = 3
+    pump_lemma = pump.pump_lemma lang, length
+
+    check_results = {
+      'aaaaa' => true,
+      'aaaab' => false,
+      'aaab' => false,
+      'aabb' => false,
+      'abb' => false
+    }
+
+    check_results.each do |word, res|
+      pump_lemma.word = word
+      pump_lemma.run show_pros: false
+      pump_lemma.is_regular
+      expect(pump_lemma.is_regular).to eq(res)
     end
   end
 end
