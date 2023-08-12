@@ -104,10 +104,10 @@ class Falafel
     dfa.to_min
   end
 
-  def pump_lemma
+  def pump_lemma(lang, length)
     require_relative 'pump'
 
-    Pump.new lang: nil, word: nil
+    Pump.new lang: lang, length: length
   end
 
   def cfg(alphabet, vars_set, start_var, rules)

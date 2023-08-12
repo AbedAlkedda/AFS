@@ -6,23 +6,24 @@
 # k is the potens of the middle word
 class Pump
   attr_accessor :lang, :word
+  attr_reader :is_regular
 
-  def initialize(lang:, word:)
-    @lang = lang
-    @word = word
-    @n    = 2
-    @k    = 20
+  def initialize(lang:, length:)
+    @lang   = lang
+    @length = length
+    @word   = ''
+    @k      = 20
   end
 
-  def run
+  def run()
     r, s, t = ''
-
-    (0...@word.length - @n + 1).each do |i|
+    puts @word.length - @length + 1
+    (0...@word.length - @length + 1).each do |i|
       r = @word[0...i]
-      s = @word[i...i + @n]
-      t = @word[i + @n..]
+      s = @word[i...i + @length]
+      t = @word[i + @length..]
 
-      # puts "r: #{r}\ns: #{s}\nt: #{t}"
+      puts "r: #{r}\ns: #{s}\nt: #{t}"
 
       break if s.length.positive? && (r + s * @k + t) != @word && @lang.call(r + s * @k + t)
     end
