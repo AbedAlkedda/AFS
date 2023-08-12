@@ -2,7 +2,7 @@
 
 require_relative 'cyk'
 require_relative 'chomsky_nf'
-require_relative 'epsilon_free'
+require_relative 'chomsky_helper/epsilon_free'
 require_relative 'chomsky_helper/chaining_free'
 
 # Samll CFG impletation
@@ -35,7 +35,7 @@ class CFG
   end
 
   def epsilon_free(custom_rule)
-    e_free        = EpsilonFree.new
+    e_free        = ChomskyHelper::EpsilonFree.new
     @rules_ef_res = e_free.run custom_rule || @rules
     @rules_ef     = e_free.rebuild_rules @rules, @rules_ef_res
   end
