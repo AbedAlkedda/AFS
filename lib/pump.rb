@@ -2,32 +2,65 @@
 
 # Pump Lemma
 # It takes language as lambda function and a word as a string
-# n is the length of the string you want to pump
-# k is the potens of the middle word
+# lang is a regular expression like a^*b^* given as lambda function and set by user
+# word is the word to check pumping
+# length is the length of the string you want to pump
+# return is_regular to tell if lang is regular and decomposition to show why
 class Pump
   attr_accessor :lang, :word
-  attr_reader :is_regular
+  attr_reader :is_regular, :decomposition
 
   def initialize(lang:, length:)
     @lang   = lang
     @length = length
     @word   = ''
-    @k      = 20
   end
 
   def run()
+    @decomposition = []
+    @is_regular    = true
+
     r, s, t = ''
-    puts @word.length - @length + 1
-    (0...@word.length - @length + 1).each do |i|
+
+    if @word.length == @length
+      @word.length.times do |i|
+        pump_up_down_res = []
+        r = @word[0...i] || ''
+        s = @word[i...i + @length] || ''
+        t = @word[i + @length..] || ''
+
+        20.times do |k|
+          # puts "r: #{r}, s: #{s}, t: #{t}, k: #{k}, r + s * k + t: #{r + s * k + t}"
+          pump_up_down_res << (s.length.positive? && @lang.call(r + s * k + t))
+        end
+
+        if pump_up_down_res.include? false
+          @is_regular = false
+          return @decomposition = [r, s, t]
+        end
+
+        @decomposition = [r, s, t]
+      end
+
+      return
+    end
+
+    (0...@word.length - @length).each do |i|
+      pump_up_down_res = []
       r = @word[0...i]
       s = @word[i...i + @length]
       t = @word[i + @length..]
 
-      puts "r: #{r}\ns: #{s}\nt: #{t}"
+      20.times do |k|
+        # puts "r: #{r}, s: #{s}, t: #{t}, k: #{k}, r + s * k + t: #{r + s * k + t}"
+        pump_up_down_res << (s.length.positive? && @lang.call(r + s * k + t))
+      end
 
-      break if s.length.positive? && (r + s * @k + t) != @word && @lang.call(r + s * @k + t)
+      if pump_up_down_res.include? false
+        @is_regular = false
+        break
+      end
     end
-
-    [r, s, t]
+    @decomposition = [r, s, t]
   end
 end
