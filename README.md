@@ -321,7 +321,3 @@ It solves some of the automata and formal languages problems:
     word aacbcbacbc is in CFL
   ```
   ---
-
-## Coming soon
-  * Run using container
-  * Build frontend to use the gem
